@@ -6,10 +6,10 @@ import kotlin.test.assertNotNull
 
 class DenoPluginTest {
   @Test
-  fun `task 'greeting' is registered`() {
+  fun `task 'denoInstall' is registered`() {
     val project = ProjectBuilder.builder().build()
     project.plugins.apply("org.rognan.gradle.deno-plugin")
 
-    assertNotNull(project.tasks.findByName("greeting"))
+    assertNotNull(project.tasks.findByName("denoInstall"))
   }
 }

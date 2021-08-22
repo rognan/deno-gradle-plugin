@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 
 class DenoPluginFunctionalTest {
   @Test
-  fun `task 'greeting' can be executed`() {
+  fun `task 'denoInstall' can be executed`() {
     // Setup
     val projectDir = File("build/functionalTest")
     projectDir.mkdirs()
@@ -24,7 +24,7 @@ class DenoPluginFunctionalTest {
     val runner = GradleRunner.create()
     runner.forwardOutput()
     runner.withPluginClasspath()
-    runner.withArguments("greeting")
+    runner.withArguments("denoInstall")
     runner.withProjectDir(projectDir)
     val result = runner.build()
 
