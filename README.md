@@ -4,11 +4,20 @@ This plugin enables you to use [Deno](https://deno.land/) as part of your Gradle
 
 ## Documentation
 
+### Requirements
+
+- Gradle >= v6.0
+- Java >= 11 (The one running Gradle)
+
 ### Install & Configure
 
 ```kotlin
 plugins {
   id("org.rognan.gradle.deno-plugin")
+}
+
+deno {
+  version.set("1.14.0")
 }
 ```
 

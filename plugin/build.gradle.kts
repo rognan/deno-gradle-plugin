@@ -15,6 +15,8 @@ dependencies {
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+  testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.2")
+  testImplementation("org.assertj:assertj-core:3.20.2")
 }
 
 gradlePlugin {
@@ -24,8 +26,7 @@ gradlePlugin {
   }
 }
 
-val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest") {
-}
+val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 
 gradlePlugin.testSourceSets(functionalTestSourceSet)
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
