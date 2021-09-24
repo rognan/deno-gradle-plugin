@@ -1,7 +1,7 @@
 plugins {
   `java-gradle-plugin`
 
-  id("org.jetbrains.kotlin.jvm") version "1.5.0"
+  id("org.jetbrains.kotlin.jvm") version "1.5.20"
   id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
 }
 
