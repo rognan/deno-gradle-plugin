@@ -22,6 +22,11 @@ plugins {
 deno {
   version.set("1.14.0")
 }
+
+// execute deno with arguments
+tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("denoExec") {
+  args.set(listOf("--help"))
+}
 ```
 
 ## License
