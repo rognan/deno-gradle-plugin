@@ -9,23 +9,6 @@ repositories {
   mavenCentral()
 }
 
-dependencies {
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-  testImplementation("org.jetbrains.kotlin:kotlin-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-  testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
-  testImplementation("org.assertj:assertj-core:3.21.0")
-}
-
-gradlePlugin {
-  plugins.create("denoPlugin") {
-    id = "org.rognan.gradle.deno-plugin"
-    implementationClass = "org.rognan.gradle.deno.DenoPlugin"
-  }
-}
-
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 
 gradlePlugin.testSourceSets(functionalTestSourceSet)
@@ -44,4 +27,21 @@ tasks.withType<Test>().configureEach {
 
 tasks.check {
   dependsOn(functionalTest)
+}
+
+gradlePlugin {
+  plugins.create("denoPlugin") {
+    id = "org.rognan.gradle.deno-plugin"
+    implementationClass = "org.rognan.gradle.deno.DenoPlugin"
+  }
+}
+
+dependencies {
+  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+  testImplementation("org.jetbrains.kotlin:kotlin-test")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+  testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
+  testImplementation("org.assertj:assertj-core:3.21.0")
 }
