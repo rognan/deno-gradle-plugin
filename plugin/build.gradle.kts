@@ -21,6 +21,10 @@ tasks.withType<Test>().configureEach {
   useJUnitPlatform()
 }
 
+tasks.withType<JavaCompile>().configureEach {
+  options.release.set(8)
+}
+
 tasks.check {
   dependsOn(functionalTest)
 }
