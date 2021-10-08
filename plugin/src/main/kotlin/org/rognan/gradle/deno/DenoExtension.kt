@@ -18,31 +18,18 @@ package org.rognan.gradle.deno
 
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
-import org.rognan.gradle.deno.util.DependencyHelper
 
-open class DenoExtension internal constructor(project: Project, dh: DependencyHelper) {
+open class DenoExtension internal constructor(project: Project) {
   val version: Property<String> = project.objects.property(String::class.java)
     .convention(DEFAULT_VERSION)
-
-  internal val dependencyCoordinates: Property<String> =
-    project.objects.property(String::class.java)
-      .convention(
-        "${dh.organization()}:${dh.module()}:${version.get()}" +
-          ":${dh.classifier()}@${dh.extension()}"
-      )
 
   companion object {
     private const val NAME = "deno"
     const val DEFAULT_VERSION = "1.14.0"
 
     @JvmStatic
-    operator fun get(project: Project): DenoExtension {
-      return project.extensions.getByType(DenoExtension::class.java)
-    }
-
-    @JvmStatic
-    fun create(project: Project, dependencyHelper: DependencyHelper): DenoExtension {
-      return project.extensions.create(NAME, DenoExtension::class.java, project, dependencyHelper)
+    fun create(project: Project): DenoExtension {
+      return project.extensions.create(NAME, DenoExtension::class.java, project)
     }
   }
 }

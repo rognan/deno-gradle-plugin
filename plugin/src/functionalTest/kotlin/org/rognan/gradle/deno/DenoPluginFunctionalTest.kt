@@ -31,7 +31,7 @@ class DenoPluginFunctionalTest {
   @JvmField
   val projectDir: File? = null
 
-  private val denoVersion = "1.14.0"
+  private val denoVersion = "1.14.2"
 
   @BeforeTest
   fun `setUp`() {
@@ -61,7 +61,7 @@ class DenoPluginFunctionalTest {
           }
 
           tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("denoExec") {
-            args.set(listOf("--help"))
+            args.set(listOf("--version"))
           }
       """.trimIndent()
     )
@@ -91,6 +91,5 @@ class DenoPluginFunctionalTest {
     assertThat(execTask!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
 
     assertThat(buildResult.output).contains("deno $denoVersion")
-    assertThat(buildResult.output).contains("A secure JavaScript and TypeScript runtime")
   }
 }

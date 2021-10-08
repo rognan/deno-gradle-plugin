@@ -19,6 +19,9 @@ package org.rognan.gradle.deno
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.file.Directory
+import org.gradle.api.file.RegularFile
+import org.gradle.api.provider.Provider
 import org.rognan.gradle.deno.task.DenoExecTask
 import org.rognan.gradle.deno.task.InstallTask
 import org.rognan.gradle.deno.util.DependencyHelper
@@ -31,7 +34,7 @@ class DenoPlugin : Plugin<Project> {
     val helper = DependencyHelper()
     val platform = PlatformInformation()
 
-    val extension = DenoExtension.create(project, helper)
+    val extension = DenoExtension.create(project)
 
     val denoConfiguration: Configuration = project.configurations.create("deno") { configuration ->
       configuration.description = "Configuration for 'org.rognan.gradle.deno-plugin'"
@@ -42,7 +45,10 @@ class DenoPlugin : Plugin<Project> {
 
       configuration.defaultDependencies { dependencySet ->
         dependencySet.add(
-          project.dependencies.create(extension.dependencyCoordinates.get())
+          project.dependencies.create(
+            "${helper.organization()}:${helper.module()}:${extension.version.get()}" +
+              ":${helper.classifier()}@${helper.extension()}"
+          )
         )
       }
     }
@@ -70,27 +76,32 @@ class DenoPlugin : Plugin<Project> {
       }
     }
 
-    val dependency: File = denoConfiguration.resolve().single()
-
-    val installDir = project.rootProject
-      .layout.projectDirectory
-      .dir(".gradle")
-      .dir("deno")
-      .dir("v${extension.version.get()}-${helper.classifier()}")
-
-    val installTask = project.tasks.register(InstallTask.NAME, InstallTask::class.java) {
-      it.archive.set(dependency)
-      it.destinationDir.set(installDir)
+    val denoArchiveProvider: Provider<File> = denoConfiguration.elements.map { it.first().asFile }
+    val installDirProvider: Provider<Directory> = project.provider {
+      project.rootProject.layout.projectDirectory
+        .dir(".gradle")
+        .dir("deno")
+        .dir("v${extension.version.get()}-${helper.classifier()}")
+    }
+    val denoProvider: Provider<RegularFile> = installDirProvider.flatMap {
+      project.provider {
+        it.file(
+          when {
+            platform.isWindows() -> "deno.exe"
+            else -> "deno"
+          }
+        )
+      }
     }
 
-    val executable: String = when {
-      platform.isWindows() -> "deno.exe"
-      else -> "deno"
+    val installTask = project.tasks.register(InstallTask.NAME, InstallTask::class.java) {
+      it.archive.set(project.layout.file(denoArchiveProvider))
+      it.destinationDir.set(installDirProvider)
     }
 
     project.tasks.withType(DenoExecTask::class.java).configureEach {
       it.dependsOn(installTask)
-      it.deno.set(installDir.file(executable))
+      it.deno.set(denoProvider)
     }
   }
 }
