@@ -17,7 +17,7 @@ deno {
   // deno is downloaded from the releases at
   // https://github.com/denoland/deno/
   // and placed in .gradle/deno/..
-  version.set("1.14.2")
+  version.set("1.14.3")
 }
 
 // arguments are forwarded directly to deno as is
