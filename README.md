@@ -1,24 +1,28 @@
 ![Build](https://github.com/rognan/deno-gradle-plugin/actions/workflows/main.yml/badge.svg)
 
+**NB! This plugin is not yet released.**
+
 # Gradle Plugin for Deno
 
 This plugin enables you to use [Deno](https://deno.land/) as part of your Gradle build.
 
-**NB!** This plugin is not yet released on the Gradle Plugin Portal.
-
 Example:
+
 ```kotlin
 plugins {
   id("org.rognan.gradle.deno-plugin") version "0.1.0"
 }
 
 deno {
+  // deno is downloaded from the releases at
+  // https://github.com/denoland/deno/
+  // and placed in .gradle/deno/..
   version.set("1.14.2")
 }
 
-// execute deno with arguments
-tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("denoExec") {
-  args.set(listOf("--help"))
+// arguments are forwarded directly to deno as is
+tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("helloWorld") {
+  args.set(listOf("eval", "console.log('Hello, World!');"))
 }
 ```
 
