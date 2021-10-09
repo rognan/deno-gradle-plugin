@@ -4,6 +4,9 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "deno-gradle-plugin"
+include(
+  "plugin",
+  "samples"
+)
 
-include("plugin")
+rootProject.name = "deno-gradle-plugin"
