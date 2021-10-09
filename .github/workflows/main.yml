@@ -1,7 +1,14 @@
 name: "Build"
 on: [ push, pull_request ]
 jobs:
+  validate-gradle-wrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
   build:
+    needs:
+      - validate-gradle-wrapper
     strategy:
       matrix:
         include:
