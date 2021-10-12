@@ -7,7 +7,6 @@ plugins {
 
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 
-gradlePlugin.testSourceSets(functionalTestSourceSet)
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
 val functionalTest by tasks.registering(Test::class) {
@@ -37,6 +36,8 @@ tasks.check {
 }
 
 gradlePlugin {
+  testSourceSets(functionalTestSourceSet)
+
   plugins.create("denoPlugin") {
     id = "org.rognan.gradle.deno-plugin"
     implementationClass = "org.rognan.gradle.deno.DenoPlugin"
