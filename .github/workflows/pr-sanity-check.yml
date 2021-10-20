@@ -1,0 +1,43 @@
+name: "Sanity check pull request"
+on: [ pull_request ]
+jobs:
+  validate-gradle-wrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+  verify-no-whitespace-errors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: git log --check
+        run: |
+          commit=
+          errors=
+          while read prefix remainder
+          do
+            case "${prefix}" in
+            "---")
+              commit="${remainder}"
+              ;;
+            "")
+              ;;
+            *)
+              if test -n "${commit}"
+              then
+                errors="${errors}\n${commit}"
+                echo "--- ${commit}"
+              fi
+              commit=
+              errors="${errors}\n${prefix} ${remainder}"
+              echo "${prefix} ${remainder}"
+              ;;
+            esac
+          done <<< $(git log --check --pretty=format:"--- %h %s" ${{github.event.pull_request.base.sha}}..)
+
+          if test -n "${errors}"
+          then
+            exit 2
+          fi

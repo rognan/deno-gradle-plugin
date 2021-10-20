@@ -1,6 +1,6 @@
-#
-# https://help.github.com/articles/dealing-with-line-endings/
-#
-# These are explicitly windows files and should use crlf
-*.bat           text eol=crlf
-
+*       text=auto whitespace=-blank-at-eof,blank-at-eol,space-before-tab,tab-in-indent
+*.bat   text eol=crlf
+*.jar   binary
+*.md    text whitespace=-blank-at-eof,-blank-at-eol,space-before-tab,tab-in-indent
+*.sh    text eol=lf
+gradlew text eol=lf
