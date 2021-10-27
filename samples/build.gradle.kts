@@ -12,16 +12,17 @@ plugins {
   id("base")
 }
 
-val scriptFiles = listOf("gradlew", "gradlew.bat")
+var samples = projectDir.walk()
+  .filter { it.isFile && it.name in listOf("gradlew", "gradlew.bat") }
+  .map { it.parentFile }.toSet()
+  .map { sampleDir: File ->
+    tasks.register(sampleDir.toTaskName()) {
+      group = "Sample Project"
+      description = "Build sample project '${sampleDir.name}'."
 
-tasks.named("build") {
-  doLast {
-    projectDir.walk()
-      .filter { it.isFile && it.name in scriptFiles }
-      .map { it.parentFile }.toSet()
-      .forEach { sample ->
+      doLast {
         org.gradle.tooling.GradleConnector.newConnector()
-          .forProjectDirectory(sample)
+          .forProjectDirectory(sampleDir)
           .connect()
           .use { connection ->
             connection
@@ -30,5 +31,14 @@ tasks.named("build") {
               .run()
           }
       }
+    }
   }
+
+tasks.named("build") {
+  dependsOn(samples)
 }
+
+fun File.toTaskName() = name.split("-")
+  .joinToString("", "build", "") {
+    it.capitalize()
+  }
