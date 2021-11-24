@@ -68,6 +68,11 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 tasks.named<Jar>("jar") {
   archiveBaseName.set("deno-plugin")
 
+  manifest.attributes["Implementation-Title"] = "deno-plugin"
+  manifest.attributes["Implementation-Version"] = project.version
+  manifest.attributes["Created-By"] =
+    "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+
   from(rootDir) {
     include("LICENSE")
   }
