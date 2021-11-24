@@ -67,6 +67,10 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 
 tasks.named<Jar>("jar") {
   archiveBaseName.set("deno-plugin")
+
+  from(rootDir) {
+    include("LICENSE")
+  }
 }
 
 dependencies {
