@@ -27,5 +27,10 @@ tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("helloWorld") {
 }
 ```
 
+You may also wish to take a look at more comprehensive examples:
+
+- [hello-world](samples/hello-world)
+- [build-cache](samples/build-cache)
+
 [0]: https://deno.land/
 [1]: https://gradle.org/
