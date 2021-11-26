@@ -10,10 +10,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: 'macos-latest', arch: 'x64', java-version: '11' }
-          - { os: 'ubuntu-latest', arch: 'x64', java-version: '11' }
-          - { os: 'windows-latest', arch: 'x64', java-version: '11' }
-    name: Java ${{ matrix.java-version }} on ${{ matrix.os }} (${{ matrix.arch }})
+          - { os: 'macos-latest', arch: 'x64', java-version: '11', gradle-version: '7.3' }
+          - { os: 'ubuntu-latest', arch: 'x64', java-version: '11', gradle-version: '7.3' }
+          - { os: 'windows-latest', arch: 'x64', java-version: '11', gradle-version: '7.3' }
+    name: Gradle ${{ matrix.gradle-version }}, Java ${{ matrix.java-version }} on ${{ matrix.os }} (${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -23,8 +23,12 @@ jobs:
           architecture: ${{ matrix.arch }}
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
-          cache: 'gradle'
-      - run: ./gradlew build --scan --no-daemon
+      - uses: gradle/gradle-build-action@v2
+        with:
+          # Only write to the cache on the 'main' branch
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+          gradle-version: ${{ matrix.gradle-version }}
+          arguments: build --scan
       - name: Upload build reports
         uses: actions/upload-artifact@v2
         if: always()
