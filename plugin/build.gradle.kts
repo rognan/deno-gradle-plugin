@@ -7,11 +7,9 @@ buildscript {
 
 plugins {
   id("java-gradle-plugin")
-  id("org.jetbrains.kotlin.jvm") version "1.6.0"
-  id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
-val javaLanguageVersion: JavaLanguageVersion = JavaLanguageVersion.of(11)
+val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(11)
 val jvmReleaseTarget: JavaLanguageVersion = JavaLanguageVersion.of(8)
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
@@ -34,13 +32,7 @@ gradlePlugin {
 
 java {
   toolchain {
-    languageVersion.set(javaLanguageVersion)
-  }
-}
-
-kotlin {
-  jvmToolchain {
-    (this as JavaToolchainSpec).languageVersion.set(javaLanguageVersion)
+    languageVersion.set(jdkVersion)
   }
 }
 
@@ -48,18 +40,20 @@ tasks.withType<JavaCompile>().configureEach {
   options.release.set(jvmReleaseTarget.asInt())
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-  kotlinOptions {
-    jvmTarget = when {
-      jvmReleaseTarget.asInt() <= 8 -> "1.%d".format(jvmReleaseTarget.asInt())
-      else -> "$jvmReleaseTarget"
-    }
-    allWarningsAsErrors = true
-  }
+tasks.named<JavaCompile>("compileTestJava") {
+  options.release.set(jdkVersion.asInt())
 }
+
+tasks.named<JavaCompile>("compileFunctionalTestJava") {
+  options.release.set(jdkVersion.asInt())
+}
+
 
 tasks.withType<Test>().configureEach {
   useJUnitPlatform()
+  javaLauncher.set(javaToolchains.launcherFor {
+    languageVersion.set(jdkVersion)
+  })
 }
 
 val functionalTest by tasks.registering(Test::class) {
@@ -96,11 +90,13 @@ tasks.named<Jar>("jar") {
 }
 
 dependencies {
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-  testImplementation("org.jetbrains.kotlin:kotlin-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-  testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
   testImplementation("org.assertj:assertj-core:3.21.0")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+  testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+  "functionalTestRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+}
+
+repositories {
+  mavenCentral()
 }

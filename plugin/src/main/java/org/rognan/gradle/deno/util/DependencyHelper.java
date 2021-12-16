@@ -14,26 +14,36 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno.util
+package org.rognan.gradle.deno.util;
 
 /**
  * Provides utility functions that helps identify which platform specific deno dependency to fetch
  * from the build assets available with each deno-release.
  */
-class DependencyHelper(private val platform: PlatformInformation = PlatformInformation()) {
-  fun organization(): String {
-    return "denoland"
+public class DependencyHelper {
+  private final PlatformInformation platform;
+
+  public DependencyHelper() {
+    this(new PlatformInformation());
   }
 
-  fun module(): String {
-    return "deno"
+  public DependencyHelper(PlatformInformation platform) {
+    this.platform = platform;
   }
 
-  fun classifier(): String {
-    return "${platform.arch()}-${platform.os()}"
+  public String organization() {
+    return "denoland";
   }
 
-  fun extension(): String {
-    return "zip"
+  public String module() {
+    return "deno";
+  }
+
+  public String classifier() {
+    return String.format("%s-%s", platform.arch(), platform.os());
+  }
+
+  public String extension() {
+    return "zip";
   }
 }
