@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno.util;
+package com.github.rognan.gradle.deno.util;
 
 import java.util.Properties;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno;
+package com.github.rognan.gradle.deno;
 
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -30,7 +30,7 @@ public class DenoPluginTest {
   @BeforeEach
   void setUp() {
     project = ProjectBuilder.builder().build();
-    project.getPlugins().apply("org.rognan.gradle.deno-plugin");
+    project.getPlugins().apply("com.github.rognan.deno-plugin");
   }
 
   @Test

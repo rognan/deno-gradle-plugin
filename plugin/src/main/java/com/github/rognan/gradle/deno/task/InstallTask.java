@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno.task;
+package com.github.rognan.gradle.deno.task;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
