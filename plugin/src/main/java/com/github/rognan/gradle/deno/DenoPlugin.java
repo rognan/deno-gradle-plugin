@@ -19,6 +19,8 @@ package com.github.rognan.gradle.deno;
 import java.io.File;
 import java.net.URI;
 
+import javax.annotation.Nonnull;
+
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -29,6 +31,7 @@ import org.gradle.api.file.Directory;
 import org.gradle.api.file.RegularFile;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.TaskProvider;
+
 import com.github.rognan.gradle.deno.task.DenoExecTask;
 import com.github.rognan.gradle.deno.task.InstallTask;
 import com.github.rognan.gradle.deno.util.DependencyHelper;
@@ -36,7 +39,7 @@ import com.github.rognan.gradle.deno.util.PlatformInformation;
 
 public class DenoPlugin implements Plugin<Project> {
   @Override
-  public void apply(Project project) {
+  public void apply(@Nonnull Project project) {
     DependencyHelper helper = new DependencyHelper();
     PlatformInformation platform = new PlatformInformation();
     DenoExtension extension = DenoExtension.create(project);
@@ -52,11 +55,11 @@ public class DenoPlugin implements Plugin<Project> {
       configuration.defaultDependencies((dependencySet) -> dependencySet.add(
         project.getDependencies().create(
           String.format("%s:%s:%s:%s@%s",
-                      helper.organization(),
-                      helper.module(),
-                      extension.getVersion().get(),
-                      helper.classifier(),
-                      helper.extension()
+                        helper.organization(),
+                        helper.module(),
+                        extension.getVersion().get(),
+                        helper.classifier(),
+                        helper.extension()
           )
         ))
       );
@@ -88,16 +91,16 @@ public class DenoPlugin implements Plugin<Project> {
       .map((it) -> it.stream().findFirst().get().getAsFile());
 
     Provider<Directory> installDirProvider = project.provider(() ->
-      project.getRootProject()
-        .getLayout()
-        .getProjectDirectory()
-        .dir(".gradle")
-        .dir("deno")
-        .dir(String.format("v%s-%s", extension.getVersion().get(), helper.classifier()))
+                                                                project.getRootProject()
+                                                                  .getLayout()
+                                                                  .getProjectDirectory()
+                                                                  .dir(".gradle")
+                                                                  .dir("deno")
+                                                                  .dir(String.format("v%s-%s", extension.getVersion().get(), helper.classifier()))
     );
 
     Provider<RegularFile> denoProvider = installDirProvider.flatMap(it ->
-      project.provider(() ->platform.isWindows() ? it.file("deno.exe") : it.file("deno"))
+                                                                      project.provider(() -> platform.isWindows() ? it.file("deno.exe") : it.file("deno"))
     );
 
     TaskProvider<InstallTask> installTaskProvider = project.getTasks()
