@@ -75,9 +75,7 @@ public class DenoPluginFunctionalTest {
   @ParameterizedTest
   @ValueSource(
     strings = {
-      "7.2",
-      "6.9.1",
-      "6.0.1"
+      "7.3.3"
     }
   )
   void i_can_execute_deno_after_applying_the_plugin(String gradleVersion) {

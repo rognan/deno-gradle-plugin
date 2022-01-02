@@ -9,7 +9,7 @@ plugins {
   id("java-gradle-plugin")
 }
 
-val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(11)
+val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)
 val jvmReleaseTarget: JavaLanguageVersion = JavaLanguageVersion.of(8)
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
