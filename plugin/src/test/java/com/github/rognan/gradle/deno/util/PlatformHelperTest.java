@@ -31,7 +31,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DependencyHelperTest {
+public class PlatformHelperTest {
   public static final String A_VERSION = "1.0.1";
 
   @ParameterizedTest
@@ -41,7 +41,7 @@ public class DependencyHelperTest {
     properties.setProperty("os.name", matrix.os);
     properties.setProperty("os.arch", matrix.arch);
 
-    DependencyHelper helper = new DependencyHelper(properties);
+    PlatformHelper helper = new PlatformHelper(properties);
 
     assertThat(helper.getDependencyNotation(A_VERSION))
       .isEqualTo(matrix.expected);
@@ -53,7 +53,7 @@ public class DependencyHelperTest {
     Properties properties = new Properties(System.getProperties());
     properties.setProperty("os.name", matrix.os);
 
-    DependencyHelper helper = new DependencyHelper(properties);
+    PlatformHelper helper = new PlatformHelper(properties);
 
     assertThat(helper.getExecutableName())
       .isEqualTo(matrix.expected);
@@ -64,7 +64,7 @@ public class DependencyHelperTest {
     Properties properties = new Properties(System.getProperties());
     properties.setProperty("os.name", "TempleOS");
 
-    DependencyHelper helper = new DependencyHelper(properties);
+    PlatformHelper helper = new PlatformHelper(properties);
 
     assertThrows(IllegalStateException.class, () -> helper.getDependencyNotation("1.0.1"));
     assertThrows(IllegalStateException.class, helper::getExecutableName);
@@ -75,7 +75,7 @@ public class DependencyHelperTest {
     Properties properties = new Properties(System.getProperties());
     properties.setProperty("os.arch", "foo");
 
-    DependencyHelper helper = new DependencyHelper(properties);
+    PlatformHelper helper = new PlatformHelper(properties);
 
     assertThrows(IllegalStateException.class, () -> helper.getDependencyNotation("1.0.1"));
   }

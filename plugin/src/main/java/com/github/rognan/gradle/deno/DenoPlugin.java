@@ -34,12 +34,12 @@ import org.gradle.api.tasks.TaskProvider;
 
 import com.github.rognan.gradle.deno.task.DenoExecTask;
 import com.github.rognan.gradle.deno.task.InstallTask;
-import com.github.rognan.gradle.deno.util.DependencyHelper;
+import com.github.rognan.gradle.deno.util.PlatformHelper;
 
 public class DenoPlugin implements Plugin<Project> {
   @Override
   public void apply(@Nonnull Project project) {
-    DependencyHelper helper = new DependencyHelper();
+    PlatformHelper helper = new PlatformHelper();
     DenoExtension extension = DenoExtension.create(project);
     ConfigurationContainer configurations = project.getConfigurations();
 
