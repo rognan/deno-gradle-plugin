@@ -29,7 +29,7 @@ public class DependencyHelper {
     this(new PlatformInformation());
   }
 
-  public DependencyHelper(PlatformInformation platform) {
+  DependencyHelper(PlatformInformation platform) {
     this.platform = platform;
   }
 
