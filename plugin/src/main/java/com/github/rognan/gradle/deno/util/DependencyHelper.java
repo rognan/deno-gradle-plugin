@@ -44,7 +44,11 @@ public class DependencyHelper {
     );
   }
 
-  public String classifier() {
+  public String getInstallDirName(String version) {
+    return String.format("v%s-%s", version, classifier());
+  }
+
+  String classifier() {
     return String.format("%s-%s", platform.arch(), platform.os());
   }
 

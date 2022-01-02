@@ -85,13 +85,14 @@ public class DenoPlugin implements Plugin<Project> {
       .map((it) -> it.stream().findFirst().get().getAsFile());
 
     Provider<Directory> installDirProvider = project.provider(() -> {
-      return project
-        .getRootProject()
-        .getLayout()
-        .getProjectDirectory()
-        .dir(".gradle")
-        .dir("deno")
-        .dir(String.format("v%s-%s", extension.getVersion().get(), helper.classifier()));
+      return extension.getVersion().map((theVersion) -> {
+        return project.getRootProject()
+          .getLayout()
+          .getProjectDirectory()
+          .dir(".gradle")
+          .dir("deno")
+          .dir(helper.getInstallDirName(theVersion));
+      }).get();
     });
 
     Provider<RegularFile> denoProvider = installDirProvider.flatMap(it -> {
@@ -109,4 +110,5 @@ public class DenoPlugin implements Plugin<Project> {
       it.getDeno().set(denoProvider);
     });
   }
+
 }
