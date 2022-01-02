@@ -68,7 +68,7 @@ class PlatformInformation {
     }
   }
 
-  public Boolean isWindows() {
+  public boolean isWindows() {
     return os().equals("pc-windows-msvc");
   }
 }
