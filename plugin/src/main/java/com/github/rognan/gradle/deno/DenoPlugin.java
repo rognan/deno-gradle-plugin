@@ -54,13 +54,7 @@ public class DenoPlugin implements Plugin<Project> {
 
       configuration.defaultDependencies((dependencySet) -> dependencySet.add(
         project.getDependencies().create(
-          String.format("%s:%s:%s:%s@%s",
-                        helper.organization(),
-                        helper.module(),
-                        extension.getVersion().get(),
-                        helper.classifier(),
-                        helper.extension()
-          )
+          extension.getVersion().map(helper::getDependencyNotation).get()
         ))
       );
     });
@@ -90,18 +84,19 @@ public class DenoPlugin implements Plugin<Project> {
       .getElements()
       .map((it) -> it.stream().findFirst().get().getAsFile());
 
-    Provider<Directory> installDirProvider = project.provider(() ->
-                                                                project.getRootProject()
-                                                                  .getLayout()
-                                                                  .getProjectDirectory()
-                                                                  .dir(".gradle")
-                                                                  .dir("deno")
-                                                                  .dir(String.format("v%s-%s", extension.getVersion().get(), helper.classifier()))
-    );
+    Provider<Directory> installDirProvider = project.provider(() -> {
+      return project
+        .getRootProject()
+        .getLayout()
+        .getProjectDirectory()
+        .dir(".gradle")
+        .dir("deno")
+        .dir(String.format("v%s-%s", extension.getVersion().get(), helper.classifier()));
+    });
 
-    Provider<RegularFile> denoProvider = installDirProvider.flatMap(it ->
-                                                                      project.provider(() -> platform.isWindows() ? it.file("deno.exe") : it.file("deno"))
-    );
+    Provider<RegularFile> denoProvider = installDirProvider.flatMap(it -> {
+      return project.provider(() -> platform.isWindows() ? it.file("deno.exe") : it.file("deno"));
+    });
 
     TaskProvider<InstallTask> installTaskProvider = project.getTasks()
       .register(InstallTask.NAME, InstallTask.class, (it) -> {
