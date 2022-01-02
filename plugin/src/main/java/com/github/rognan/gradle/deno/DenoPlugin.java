@@ -35,13 +35,11 @@ import org.gradle.api.tasks.TaskProvider;
 import com.github.rognan.gradle.deno.task.DenoExecTask;
 import com.github.rognan.gradle.deno.task.InstallTask;
 import com.github.rognan.gradle.deno.util.DependencyHelper;
-import com.github.rognan.gradle.deno.util.PlatformInformation;
 
 public class DenoPlugin implements Plugin<Project> {
   @Override
   public void apply(@Nonnull Project project) {
     DependencyHelper helper = new DependencyHelper();
-    PlatformInformation platform = new PlatformInformation();
     DenoExtension extension = DenoExtension.create(project);
     ConfigurationContainer configurations = project.getConfigurations();
 
@@ -96,7 +94,7 @@ public class DenoPlugin implements Plugin<Project> {
     });
 
     Provider<RegularFile> denoProvider = installDirProvider.flatMap(it -> {
-      return project.provider(() -> platform.isWindows() ? it.file("deno.exe") : it.file("deno"));
+      return project.provider(() -> it.file(helper.getExecutableName()));
     });
 
     TaskProvider<InstallTask> installTaskProvider = project.getTasks()
@@ -110,5 +108,4 @@ public class DenoPlugin implements Plugin<Project> {
       it.getDeno().set(denoProvider);
     });
   }
-
 }
