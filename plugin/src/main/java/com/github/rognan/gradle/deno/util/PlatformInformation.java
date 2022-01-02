@@ -18,7 +18,7 @@ package com.github.rognan.gradle.deno.util;
 
 import java.util.Properties;
 
-public class PlatformInformation {
+class PlatformInformation {
   private final Properties properties;
 
   public PlatformInformation() {
