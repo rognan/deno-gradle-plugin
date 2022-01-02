@@ -16,113 +16,73 @@
 
 package com.github.rognan.gradle.deno.util;
 
-import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import javax.annotation.Nonnull;
+
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DependencyHelperTest {
-
-  private DependencyHelper provider;
-
-  @BeforeEach
-  void setUp() {
-    provider = new DependencyHelper();
-  }
+  public static final String A_VERSION = "1.0.1";
 
   @ParameterizedTest
-  @ValueSource(
-    strings = {
-      "Windows 2000",
-      "Windows XP",
-      "Windows Vista",
-      "Windows 7",
-      "Windows 8.1",
-      "Windows 10",
-      "win",
-      "Mac OS X",
-      "nix",
-      "FreeBSD",
-      "Linux",
-      "nux",
-      "aix"
-    }
-  )
-  void classifier_ends_with_appropriate_operating_system_identifier(String os) {
-    Map<String, String> expected = Map.ofEntries(
-      Map.entry("Windows 2000", "pc-windows-msvc"),
-      Map.entry("Windows XP", "pc-windows-msvc"),
-      Map.entry("Windows Vista", "pc-windows-msvc"),
-      Map.entry("Windows 7", "pc-windows-msvc"),
-      Map.entry("Windows 8.1", "pc-windows-msvc"),
-      Map.entry("Windows 10", "pc-windows-msvc"),
-      Map.entry("win", "pc-windows-msvc"),
-      Map.entry("Mac OS X", "apple-darwin"),
-      Map.entry("FreeBSD", "unknown-linux-gnu"),
-      Map.entry("nix", "unknown-linux-gnu"),
-      Map.entry("Unix", "unknown-linux-gnu"),
-      Map.entry("nux", "unknown-linux-gnu"),
-      Map.entry("Linux", "unknown-linux-gnu"),
-      Map.entry("aix", "unknown-linux-gnu")
-    );
-
+  @ArgumentsSource(DependencyNotationMatrixProvider.class)
+  void it_provides_expected_dependency_notation(DependencyNotationMatrix matrix) {
     Properties properties = new Properties(System.getProperties());
-    properties.setProperty("os.name", os);
+    properties.setProperty("os.name", matrix.os);
+    properties.setProperty("os.arch", matrix.arch);
 
-    assertThat(new DependencyHelper(new PlatformInformation(properties)).classifier())
-      .endsWith(expected.get(os));
+    DependencyHelper helper = new DependencyHelper(new PlatformInformation(properties));
+
+    assertThat(helper.getDependencyNotation(A_VERSION))
+      .isEqualTo(matrix.expected);
   }
 
-  @ParameterizedTest
-  @ValueSource(
-    strings = {
-      "x86_64",
-      "amd64",
-      "aarch64"
+  record DependencyNotationMatrix(String os, String arch, String expected) {}
+  static class DependencyNotationMatrixProvider implements ArgumentsProvider {
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+      return Stream.of(
+        tuple("Mac OS X", "x86_64", "denoland:deno:1.0.1:x86_64-apple-darwin@zip"),
+        tuple("Mac OS X", "amd64", "denoland:deno:1.0.1:x86_64-apple-darwin@zip"),
+        tuple("Mac OS X", "aarch64", "denoland:deno:1.0.1:aarch64-apple-darwin@zip"),
+        tuple("aix", "x86_64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("aix", "amd64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("nux", "x86_64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("nux", "amd64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("Linux", "x86_64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("Linux", "amd64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("FreeBSD", "x86_64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("FreeBSD", "amd64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("nix", "x86_64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("nix", "amd64", "denoland:deno:1.0.1:x86_64-unknown-linux-gnu@zip"),
+        tuple("win", "x86_64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("win", "amd64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 10", "x86_64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 10", "amd64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 8.1", "x86_64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 8.1", "amd64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 7", "x86_64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 7", "amd64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows Vista", "x86_64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows Vista", "amd64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows XP", "x86_64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows XP", "amd64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 2000", "x86_64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip"),
+        tuple("Windows 2000", "amd64", "denoland:deno:1.0.1:x86_64-pc-windows-msvc@zip")
+      ).map(Arguments::of);
     }
-  )
-  void classifier_starts_with_appropriate_architecture_identifier(String arch) {
-    Map<String, String> expected = Map.of(
-      "x86_64", "x86_64",
-      "amd64", "x86_64",
-      "aarch64", "aarch64"
-    );
 
-    Properties properties = new java.util.Properties(System.getProperties());
-    properties.setProperty("os.arch", arch);
-
-    assertThat(new DependencyHelper(new PlatformInformation(properties)).classifier())
-      .startsWith(expected.get(arch));
-  }
-
-  @Test
-  void the_architecture_and_operating_system_are_separated_by_a_dash_in_the_classifier() {
-    Properties properties = new java.util.Properties(System.getProperties());
-    properties.setProperty("os.arch", "aarch64");
-    properties.setProperty("os.name", "Linux");
-
-    assertThat(new DependencyHelper(new PlatformInformation(properties)).classifier())
-      .isEqualTo("aarch64-unknown-linux-gnu");
-  }
-
-  @Test
-  void the_organization_is_denoland() {
-    assertEquals("denoland", provider.organization());
-  }
-
-  @Test
-  void the_module_is_deno() {
-    assertEquals("deno", provider.module());
-  }
-
-  @Test
-  void the_extension_is_zip() {
-    assertEquals("zip", provider.extension());
+    @Nonnull
+    private DependencyNotationMatrix tuple(String osName, String osArch, String expectedNotation) {
+      return new DependencyNotationMatrix(osName, osArch, expectedNotation);
+    }
   }
 }

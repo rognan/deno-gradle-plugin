@@ -53,19 +53,19 @@ public class DependencyHelper {
     return String.format("v%s-%s", version, classifier());
   }
 
-  String classifier() {
+  private String classifier() {
     return String.format("%s-%s", platform.arch(), platform.os());
   }
 
-  String organization() {
+  private String organization() {
     return "denoland";
   }
 
-  String module() {
+  private String module() {
     return "deno";
   }
 
-  String extension() {
+  private String extension() {
     return "zip";
   }
 }
