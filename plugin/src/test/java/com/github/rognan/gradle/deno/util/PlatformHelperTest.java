@@ -84,7 +84,7 @@ public class PlatformHelperTest {
   record DependencyNotationMatrix(String os, String arch, String expected) {}
   static class DependencyNotationMatrixProvider implements ArgumentsProvider {
     @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
       return Stream.of(
         tuple("Mac OS X", "x86_64", "denoland:deno:1.0.1:x86_64-apple-darwin@zip"),
         tuple("Mac OS X", "amd64", "denoland:deno:1.0.1:x86_64-apple-darwin@zip"),
@@ -124,7 +124,7 @@ public class PlatformHelperTest {
 
   static class ExecutableNameMatrixProvider implements ArgumentsProvider {
     @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
       return Stream.of(
         tuple("Mac OS X", "deno"),
         tuple("Mac OS X", "deno"),
