@@ -9,6 +9,9 @@ plugins {
   id("java-gradle-plugin")
 }
 
+group = "com.github.rognan.gradle"
+version = "0.1.0"
+
 val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)
 val jvmReleaseTarget: JavaLanguageVersion = JavaLanguageVersion.of(8)
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
@@ -47,7 +50,6 @@ tasks.named<JavaCompile>("compileTestJava") {
 tasks.named<JavaCompile>("compileFunctionalTestJava") {
   options.release.set(jdkVersion.asInt())
 }
-
 
 tasks.withType<Test>().configureEach {
   useJUnitPlatform()
