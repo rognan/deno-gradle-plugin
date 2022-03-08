@@ -16,11 +16,9 @@
 
 package com.github.rognan.gradle.deno;
 
-import java.io.File;
-import java.net.URI;
-
-import javax.annotation.Nonnull;
-
+import com.github.rognan.gradle.deno.task.DenoExecTask;
+import com.github.rognan.gradle.deno.task.InstallTask;
+import com.github.rognan.gradle.deno.util.PlatformHelper;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -32,10 +30,28 @@ import org.gradle.api.file.RegularFile;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.TaskProvider;
 
-import com.github.rognan.gradle.deno.task.DenoExecTask;
-import com.github.rognan.gradle.deno.task.InstallTask;
-import com.github.rognan.gradle.deno.util.PlatformHelper;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.net.URI;
 
+/**
+ * Enable the use of <a href="https://deno.land/">Deno</a> in your Gradle build.
+ *
+ * Example:
+ * <pre>
+ *   plugins {
+ *     id("com.github.rognan.deno-plugin") version "0.1.0"
+ *   }
+ *
+ *   deno {
+ *     version.set("1.19.1")
+ *   }
+ *
+ *   tasks.register&#60;com.github.rognan.gradle.deno.task.DenoExecTask&#62;("helloWorld") {
+ *     args.set(listOf("eval", "console.log('Hello, World!');"))
+ *   }
+ * </pre>
+ */
 public class DenoPlugin implements Plugin<Project> {
   @Override
   public void apply(@Nonnull Project project) {

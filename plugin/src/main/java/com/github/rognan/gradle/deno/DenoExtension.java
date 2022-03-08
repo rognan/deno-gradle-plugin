@@ -19,21 +19,40 @@ package com.github.rognan.gradle.deno;
 import org.gradle.api.Project;
 import org.gradle.api.provider.Property;
 
+/**
+ * Extension class allowing users to configure the plugin using Gradle DSL.
+ *
+ * <pre>
+ * deno {
+ *   version.set("1.19.1")
+ * }
+ * </pre>
+ */
 public class DenoExtension {
   private static final String NAME = "deno";
   private static final String DEFAULT_VERSION = "1.16.3";
 
   private Property<String> version;
 
+  /**
+   * Create new instance of {@code DenoExtension}.
+   * @param project the Gradle project
+   */
   public DenoExtension(Project project) {
     version = project.getObjects().property(String.class)
       .convention(DEFAULT_VERSION);
   }
 
+  /**
+   * @return the deno version
+   */
   public Property<String> getVersion() {
     return version;
   }
 
+  /**
+   * @param version the deno version to use
+   */
   public void setVersion(Property<String> version) {
     this.version = version;
   }

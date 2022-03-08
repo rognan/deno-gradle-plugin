@@ -16,9 +16,8 @@
 
 package com.github.rognan.gradle.deno.util;
 
-import java.util.Properties;
-
 import javax.annotation.Nonnull;
+import java.util.Properties;
 
 /**
  * Provides utility functions that help identify which platform specific deno dependency to fetch
@@ -27,6 +26,9 @@ import javax.annotation.Nonnull;
 public class PlatformHelper {
   private final Properties properties;
 
+  /**
+   * Create new instance of {@link  PlatformHelper}
+   */
   public PlatformHelper() {
     this(System.getProperties());
   }
@@ -35,16 +37,29 @@ public class PlatformHelper {
     this.properties = properties;
   }
 
+  /**
+   * @param version the version of deno to create a dependency notation of
+   * @return the dependency notation string, for instance 'denoland:deno:1.0:aarch64-apple-darwin@zip'
+   */
   @Nonnull
   public String getDependencyNotation(String version) {
     return String.format("denoland:deno:%s:%s@zip", version, classifier());
   }
 
+  /**
+   * @return 'deno.exe' if windows, else 'deno'
+   */
   @Nonnull
   public String getExecutableName() {
     return isWindows() ? "deno.exe" : "deno";
   }
 
+  /**
+   * The platform specific installation directory where the deno dependency is unpacked during
+   * installation.
+   * @param version the deno version in use
+   * @return the install directory name, for instance 'v1.0-aarch64-apple-darwin'
+   */
   public String getInstallDirName(String version) {
     return String.format("v%s-%s", version, classifier());
   }
