@@ -1,7 +1,7 @@
 plugins {
   id("base")
-  id("denobuild.ide-conventions")
-  id("denobuild.versioning-conventions")
+  id("build.ide-conventions")
+  id("build.versioning-conventions")
 }
 
 description = "Deno Gradle Plugin"
