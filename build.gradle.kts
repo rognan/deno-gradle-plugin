@@ -1,6 +1,6 @@
 plugins {
   id("base")
-  id("denobuild.ide")
+  id("denobuild.ide-conventions")
   id("denobuild.versioning-conventions")
 }
 
