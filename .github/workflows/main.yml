@@ -34,7 +34,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.toolchain-jdk }}
       - name: Build project
-        uses: gradle/gradle-build-action@v2.2.1
+        uses: gradle/gradle-build-action@v2.2.2
         with:
           # Only write to the cache on the 'main' branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
