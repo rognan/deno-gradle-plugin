@@ -65,6 +65,10 @@ tasks.withType<AbstractArchiveTask>().configureEach {
   fileMode = 420
 }
 
+tasks.named<Jar>("jar") {
+  archiveBaseName.set("deno-plugin")
+}
+
 dependencies {
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
