@@ -7,10 +7,8 @@ buildscript {
 
 plugins {
   id("java-gradle-plugin")
+  id("denobuild.versioning-conventions")
 }
-
-group = "com.github.rognan.gradle"
-version = "0.1.0"
 
 val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)
 val jvmReleaseTarget: JavaLanguageVersion = JavaLanguageVersion.of(8)
