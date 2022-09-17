@@ -5,10 +5,6 @@ plugins {
   id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
 }
 
-repositories {
-  mavenCentral()
-}
-
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 
 gradlePlugin.testSourceSets(functionalTestSourceSet)
