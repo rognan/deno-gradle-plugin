@@ -55,10 +55,7 @@ gradleEnterprise {
   }
 }
 
-include(
-  "plugin",
-  "samples"
-)
+include("plugin")
 
 rootProject.name = "deno-gradle-plugin"
 
