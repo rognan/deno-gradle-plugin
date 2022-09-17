@@ -45,6 +45,19 @@ public class DependencyHelperTest {
       .isEqualTo(matrix.expected);
   }
 
+  @ParameterizedTest
+  @ArgumentsSource(ExecutableNameMatrixProvider.class)
+  void it_provides_expected_executable_name(ExecutableNameMatrix matrix) {
+    Properties properties = new Properties(System.getProperties());
+    properties.setProperty("os.name", matrix.os);
+
+    DependencyHelper helper = new DependencyHelper(new PlatformInformation(properties));
+
+    assertThat(helper.getExecutableName())
+      .isEqualTo(matrix.expected);
+  }
+
+  record ExecutableNameMatrix(String os, String expected) {}
   record DependencyNotationMatrix(String os, String arch, String expected) {}
   static class DependencyNotationMatrixProvider implements ArgumentsProvider {
     @Override
@@ -83,6 +96,46 @@ public class DependencyHelperTest {
     @Nonnull
     private DependencyNotationMatrix tuple(String osName, String osArch, String expectedNotation) {
       return new DependencyNotationMatrix(osName, osArch, expectedNotation);
+    }
+  }
+
+  static class ExecutableNameMatrixProvider implements ArgumentsProvider {
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+      return Stream.of(
+        tuple("Mac OS X", "deno"),
+        tuple("Mac OS X", "deno"),
+        tuple("Mac OS X", "deno"),
+        tuple("aix", "deno"),
+        tuple("aix", "deno"),
+        tuple("nux", "deno"),
+        tuple("nux", "deno"),
+        tuple("Linux", "deno"),
+        tuple("Linux", "deno"),
+        tuple("FreeBSD", "deno"),
+        tuple("FreeBSD", "deno"),
+        tuple("nix", "deno"),
+        tuple("nix", "deno"),
+        tuple("win", "deno.exe"),
+        tuple("win", "deno.exe"),
+        tuple("Windows 10", "deno.exe"),
+        tuple("Windows 10", "deno.exe"),
+        tuple("Windows 8.1", "deno.exe"),
+        tuple("Windows 8.1", "deno.exe"),
+        tuple("Windows 7", "deno.exe"),
+        tuple("Windows 7", "deno.exe"),
+        tuple("Windows Vista", "deno.exe"),
+        tuple("Windows Vista", "deno.exe"),
+        tuple("Windows XP", "deno.exe"),
+        tuple("Windows XP", "deno.exe"),
+        tuple("Windows 2000", "deno.exe"),
+        tuple("Windows 2000", "deno.exe")
+      ).map(Arguments::of);
+    }
+
+    @Nonnull
+    private ExecutableNameMatrix tuple(String osName, String expected) {
+      return new ExecutableNameMatrix(osName, expected);
     }
   }
 }
