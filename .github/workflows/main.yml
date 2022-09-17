@@ -18,23 +18,23 @@ jobs:
       on ${{ matrix.os }} (${{ matrix.arch }}) and toolchain JDK ${{ matrix.toolchain-jdk}}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.4.0
       - name: Configure JDK ${{ matrix.gradle-jdk }} (${{ matrix.arch }})
         id: configure-gradle-jdk
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v2.4.0
         with:
           architecture: ${{ matrix.arch }}
           distribution: 'temurin'
           java-version: ${{ matrix.gradle-jdk }}
       - name: Configure JDK ${{ matrix.toolchain-jdk }} (${{ matrix.arch }})
         id: configure-toolchain-jdk
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v2.4.0
         with:
           architecture: ${{ matrix.arch }}
           distribution: 'temurin'
           java-version: ${{ matrix.toolchain-jdk }}
       - name: Build project
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.0.1
         with:
           # Only write to the cache on the 'main' branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
@@ -45,7 +45,7 @@ jobs:
             -Dorg.gradle.java.installations.auto-download=false
             -Dorg.gradle.java.installations.paths=${{ steps.configure-gradle-jdk.outputs.path }},${{ steps.configure-toolchain-jdk.outputs.path }}
       - name: Upload build reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2.2.4
         if: always()
         with:
           name: build-reports-${{ matrix.os }}-${{ matrix.arch }}-gradle-jdk-${{ matrix.gradle-jdk }}-toolchain-jdk-${{ matrix.toolchain-jdk }}
