@@ -4,8 +4,6 @@ plugins {
   `kotlin-dsl`
 }
 
-group = "org.rognan.gradle.deno-plugin"
-
 val checkBuildConfiguration by tasks.registering {
   doLast {
     val buildSrcProperties = layout.projectDirectory.file("gradle.properties").asFile

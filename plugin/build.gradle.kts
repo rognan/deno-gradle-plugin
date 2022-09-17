@@ -23,10 +23,10 @@ gradlePlugin {
   testSourceSets(functionalTestSourceSet)
 
   plugins.create("denoPlugin") {
-    id = "org.rognan.gradle.deno-plugin"
+    id = "com.github.rognan.deno-plugin"
     displayName = "Deno Gradle Plugin"
     description = "Use Deno, a runtime for JavaScript and Typescript, as part of your Gradle build."
-    implementationClass = "org.rognan.gradle.deno.DenoPlugin"
+    implementationClass = "com.github.rognan.gradle.deno.DenoPlugin"
   }
 }
 

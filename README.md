@@ -11,18 +11,17 @@ Example:
 
 ```kotlin
 plugins {
-  id("org.rognan.gradle.deno-plugin") version "0.1.0"
+  id("com.github.rognan.deno-plugin") version "0.1.0"
 }
 
 deno {
-  // deno is downloaded from the releases at
-  // https://github.com/denoland/deno/
-  // and placed in .gradle/deno/..
+  // deno is downloaded from https://github.com/denoland/deno/releases
+  // and placed in ${rootProject}/.gradle/deno/v${denoVersion}-${arch}-${os}
   version.set("1.16.3")
 }
 
-// arguments are forwarded directly to deno as is
-tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("helloWorld") {
+// arguments are forwarded directly to deno
+tasks.register<com.github.rognan.gradle.deno.task.DenoExecTask>("helloWorld") {
   args.set(listOf("eval", "console.log('Hello, World!');"))
 }
 ```

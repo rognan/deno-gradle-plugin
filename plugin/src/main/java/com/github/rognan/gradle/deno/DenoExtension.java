@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno;
+package com.github.rognan.gradle.deno;
 
 import org.gradle.api.Project;
 import org.gradle.api.provider.Property;

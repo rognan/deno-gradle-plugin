@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno;
+package com.github.rognan.gradle.deno;
 
 import java.io.File;
 import java.net.URI;
@@ -29,10 +29,10 @@ import org.gradle.api.file.Directory;
 import org.gradle.api.file.RegularFile;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.TaskProvider;
-import org.rognan.gradle.deno.task.DenoExecTask;
-import org.rognan.gradle.deno.task.InstallTask;
-import org.rognan.gradle.deno.util.DependencyHelper;
-import org.rognan.gradle.deno.util.PlatformInformation;
+import com.github.rognan.gradle.deno.task.DenoExecTask;
+import com.github.rognan.gradle.deno.task.InstallTask;
+import com.github.rognan.gradle.deno.util.DependencyHelper;
+import com.github.rognan.gradle.deno.util.PlatformInformation;
 
 public class DenoPlugin implements Plugin<Project> {
   @Override
@@ -43,7 +43,7 @@ public class DenoPlugin implements Plugin<Project> {
     ConfigurationContainer configurations = project.getConfigurations();
 
     Configuration denoConfiguration = configurations.create("deno", (configuration) -> {
-      configuration.setDescription("Configuration for 'org.rognan.gradle.deno-plugin'");
+      configuration.setDescription("Configuration for 'com.github.rognan.gradle.deno-plugin'");
       configuration.setCanBeConsumed(false);
       configuration.setCanBeResolved(true);
       configuration.setTransitive(false);
@@ -65,7 +65,7 @@ public class DenoPlugin implements Plugin<Project> {
     final RepositoryHandler repositories = project.getRepositories();
 
     repositories.ivy((repository) -> {
-      repository.setName("org.rognan.gradle.deno:denoland@github");
+      repository.setName("com.github.rognan.gradle.deno:denoland@github");
       repository.setUrl(URI.create("https://github.com/"));
 
       repository.patternLayout((layout) -> layout.artifact(

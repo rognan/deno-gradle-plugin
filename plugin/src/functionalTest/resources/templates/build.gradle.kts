@@ -1,11 +1,11 @@
 plugins {
-  id("org.rognan.gradle.deno-plugin") version("0.1.0")
+  id("com.github.rognan.deno-plugin") version("0.1.0")
 }
 
 deno {
   version.set("%s")
 }
 
-tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("denoExec") {
+tasks.register<com.github.rognan.gradle.deno.task.DenoExecTask>("denoExec") {
   args.set(listOf("--version"))
 }

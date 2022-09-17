@@ -6,6 +6,6 @@ plugins {
 description = "Deno Gradle Plugin"
 
 allprojects {
-  group = "org.rognan.gradle"
+  group = "com.github.rognan.gradle"
   version = "0.1.0"
 }

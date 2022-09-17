@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno;
+package com.github.rognan.gradle.deno;
 
 import java.io.File;
 import java.io.IOException;

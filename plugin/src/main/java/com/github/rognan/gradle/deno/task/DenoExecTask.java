@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.rognan.gradle.deno.task;
+package com.github.rognan.gradle.deno.task;
 
 import java.util.stream.Stream;
 
@@ -26,7 +26,6 @@ import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.process.CommandLineArgumentProvider;
 import org.gradle.process.ExecResult;
 
 public class DenoExecTask extends DefaultTask {
