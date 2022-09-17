@@ -20,8 +20,8 @@ import org.gradle.api.Project;
 import org.gradle.api.provider.Property;
 
 public class DenoExtension {
-  public static final String NAME = "deno";
-  public static final String DEFAULT_VERSION = "1.16.3";
+  private static final String NAME = "deno";
+  private static final String DEFAULT_VERSION = "1.16.3";
 
   private Property<String> version;
 
