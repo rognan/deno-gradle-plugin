@@ -11,6 +11,7 @@ plugins {
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
+val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(11)
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
@@ -27,6 +28,18 @@ gradlePlugin {
     displayName = "Deno Gradle Plugin"
     description = "Use Deno, a runtime for JavaScript and Typescript, as part of your Gradle build."
     implementationClass = "org.rognan.gradle.deno.DenoPlugin"
+  }
+}
+
+java {
+  toolchain {
+    languageVersion.set(jdkVersion)
+  }
+}
+
+kotlin {
+  jvmToolchain {
+    (this as JavaToolchainSpec).languageVersion.set(jdkVersion)
   }
 }
 
