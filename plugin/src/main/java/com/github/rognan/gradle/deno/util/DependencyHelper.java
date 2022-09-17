@@ -16,6 +16,8 @@
 
 package com.github.rognan.gradle.deno.util;
 
+import javax.annotation.Nonnull;
+
 /**
  * Provides utility functions that help identify which platform specific deno dependency to fetch
  * from the build assets available with each deno-release.
@@ -31,19 +33,30 @@ public class DependencyHelper {
     this.platform = platform;
   }
 
-  public String organization() {
-    return "denoland";
-  }
-
-  public String module() {
-    return "deno";
+  @Nonnull
+  public String getDependencyNotation(String version) {
+    return String.format("%s:%s:%s:%s@%s",
+                         organization(),
+                         module(),
+                         version,
+                         classifier(),
+                         extension()
+    );
   }
 
   public String classifier() {
     return String.format("%s-%s", platform.arch(), platform.os());
   }
 
-  public String extension() {
+  String organization() {
+    return "denoland";
+  }
+
+  String module() {
+    return "deno";
+  }
+
+  String extension() {
     return "zip";
   }
 }
