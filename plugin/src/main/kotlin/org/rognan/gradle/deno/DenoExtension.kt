@@ -20,7 +20,7 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.rognan.gradle.deno.util.DependencyHelper
 
-open class DenoExtension(project: Project, dh: DependencyHelper) {
+open class DenoExtension internal constructor(project: Project, dh: DependencyHelper) {
   val version: Property<String> = project.objects.property(String::class.java)
     .convention(DEFAULT_VERSION)
 
