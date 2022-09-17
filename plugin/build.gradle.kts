@@ -11,7 +11,8 @@ plugins {
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
-val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(11)
+val javaLanguageVersion: JavaLanguageVersion = JavaLanguageVersion.of(11)
+val jvmReleaseTarget: JavaLanguageVersion = JavaLanguageVersion.of(8)
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
@@ -33,23 +34,26 @@ gradlePlugin {
 
 java {
   toolchain {
-    languageVersion.set(jdkVersion)
+    languageVersion.set(javaLanguageVersion)
   }
 }
 
 kotlin {
   jvmToolchain {
-    (this as JavaToolchainSpec).languageVersion.set(jdkVersion)
+    (this as JavaToolchainSpec).languageVersion.set(javaLanguageVersion)
   }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  options.release.set(8)
+  options.release.set(jvmReleaseTarget.asInt())
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = when {
+      jvmReleaseTarget.asInt() <= 8 -> "1.%d".format(jvmReleaseTarget.asInt())
+      else -> "$jvmReleaseTarget"
+    }
     allWarningsAsErrors = true
   }
 }
