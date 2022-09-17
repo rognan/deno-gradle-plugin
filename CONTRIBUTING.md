@@ -20,10 +20,9 @@ A small sample project, or a specific guide on how to reproduce the bug, would b
 
 ## Reporting Security Vulnerabilities
 
-If you think you've found a security vulnerability in this project, please **DO NOT** disclose it
-publicly. Instead, contact a maintainer privately.
+If you've found a security vulnerability, please **do not** disclose it publicly.
 
-It'd be a great help if you can include details on how the issue being reported can be duplicated.
+Instead, follow the directions in the [security policy](SECURITY.md)
 
 ## Suggesting Features
 
