@@ -52,6 +52,17 @@ fun readProperties(propertiesFile: File) = Properties().apply {
   }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+  options.release.set(8)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions {
+    jvmTarget = "1.8"
+    allWarningsAsErrors = true
+  }
+}
+
 tasks.check {
   dependsOn(checkBuildConfiguration)
 }
