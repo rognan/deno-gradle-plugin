@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -28,6 +29,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DependencyHelperTest {
   public static final String A_VERSION = "1.0.1";
@@ -55,6 +57,27 @@ public class DependencyHelperTest {
 
     assertThat(helper.getExecutableName())
       .isEqualTo(matrix.expected);
+  }
+
+  @Test
+  void it_throws_illegal_state_exception_when_unknown_os_name() {
+    Properties properties = new Properties(System.getProperties());
+    properties.setProperty("os.name", "TempleOS");
+
+    DependencyHelper helper = new DependencyHelper(properties);
+
+    assertThrows(IllegalStateException.class, () -> helper.getDependencyNotation("1.0.1"));
+    assertThrows(IllegalStateException.class, helper::getExecutableName);
+  }
+
+  @Test
+  void it_throws_illegal_state_exception_when_unknown_os_architecture() {
+    Properties properties = new Properties(System.getProperties());
+    properties.setProperty("os.arch", "foo");
+
+    DependencyHelper helper = new DependencyHelper(properties);
+
+    assertThrows(IllegalStateException.class, () -> helper.getDependencyNotation("1.0.1"));
   }
 
   record ExecutableNameMatrix(String os, String expected) {}
