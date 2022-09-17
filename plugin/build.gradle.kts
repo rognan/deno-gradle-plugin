@@ -14,7 +14,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 }
 
 gradlePlugin {
@@ -31,8 +31,14 @@ gradlePlugin.testSourceSets(functionalTestSourceSet)
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
 val functionalTest by tasks.registering(Test::class) {
+  group = "Verification"
+
   testClassesDirs = functionalTestSourceSet.output.classesDirs
   classpath = functionalTestSourceSet.runtimeClasspath
+}
+
+tasks.withType<Test>().configureEach {
+  useJUnitPlatform()
 }
 
 tasks.check {
