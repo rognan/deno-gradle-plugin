@@ -1,6 +1,5 @@
 plugins {
-  `java-gradle-plugin`
-
+  id("java-gradle-plugin")
   id("org.jetbrains.kotlin.jvm") version "1.5.31"
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
