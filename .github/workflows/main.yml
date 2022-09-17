@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
           cache: 'gradle'
-      - run: ./gradlew build --no-daemon
+      - run: ./gradlew build --scan --no-daemon
       - name: Upload build reports
         uses: actions/upload-artifact@v2
         if: always()
