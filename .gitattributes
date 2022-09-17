@@ -1,5 +1,6 @@
-*       text=auto
+*       text=auto whitespace=-blank-at-eof,blank-at-eol,space-before-tab,tab-in-indent
 *.bat   text eol=crlf
 *.jar   binary
+*.md    text whitespace=-blank-at-eof,-blank-at-eol,space-before-tab,tab-in-indent
 *.sh    text eol=lf
 gradlew text eol=lf
