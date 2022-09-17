@@ -5,18 +5,17 @@ plugins {
 }
 
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
-
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
-val functionalTest by tasks.registering(Test::class) {
-  group = "Verification"
+gradlePlugin {
+  testSourceSets(functionalTestSourceSet)
 
-  testClassesDirs = functionalTestSourceSet.output.classesDirs
-  classpath = functionalTestSourceSet.runtimeClasspath
-}
-
-tasks.withType<Test>().configureEach {
-  useJUnitPlatform()
+  plugins.create("denoPlugin") {
+    id = "org.rognan.gradle.deno-plugin"
+    displayName = "Deno Gradle Plugin"
+    description = "Use Deno, a runtime for JavaScript and Typescript, as part of your Gradle build."
+    implementationClass = "org.rognan.gradle.deno.DenoPlugin"
+  }
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -30,19 +29,19 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   }
 }
 
-tasks.check {
-  dependsOn(functionalTest)
+tasks.withType<Test>().configureEach {
+  useJUnitPlatform()
 }
 
-gradlePlugin {
-  testSourceSets(functionalTestSourceSet)
+val functionalTest by tasks.registering(Test::class) {
+  group = "Verification"
 
-  plugins.create("denoPlugin") {
-    id = "org.rognan.gradle.deno-plugin"
-    displayName = "Deno Gradle Plugin"
-    description = "Use Deno, a runtime for JavaScript and Typescript, as part of your Gradle build."
-    implementationClass = "org.rognan.gradle.deno.DenoPlugin"
-  }
+  testClassesDirs = functionalTestSourceSet.output.classesDirs
+  classpath = functionalTestSourceSet.runtimeClasspath
+}
+
+tasks.check {
+  dependsOn(functionalTest)
 }
 
 dependencies {
