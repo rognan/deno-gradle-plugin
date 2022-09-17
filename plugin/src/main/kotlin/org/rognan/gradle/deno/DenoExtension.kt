@@ -25,7 +25,7 @@ open class DenoExtension internal constructor(project: Project) {
 
   companion object {
     private const val NAME = "deno"
-    const val DEFAULT_VERSION = "1.14.3"
+    const val DEFAULT_VERSION = "1.16.3"
 
     @JvmStatic
     fun create(project: Project): DenoExtension {

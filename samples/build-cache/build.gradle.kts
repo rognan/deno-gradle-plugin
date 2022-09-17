@@ -4,7 +4,7 @@ plugins {
 }
 
 deno {
-  version.set("1.15.3")
+  version.set("1.16.3")
 }
 
 tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("bundle") {
