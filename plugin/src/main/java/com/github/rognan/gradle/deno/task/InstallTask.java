@@ -33,12 +33,21 @@ import org.gradle.api.tasks.WorkResult;
 // there's no network overhead to speak of, and unzipping the file is about as expensive as
 // restoring it from a cache.
 public class InstallTask extends DefaultTask {
+
+  /**
+   * The default task group for {@link InstallTask}.
+   */
   public static final String DEFAULT_GROUP = "Build Setup";
+
+  /**
+   * The task name
+   */
   public static final String NAME = "denoInstall";
   {
     setGroup(DEFAULT_GROUP);
     setDescription("Installs a local version of deno.");
   }
+
   /**
    * The zip archive to unpack into {@code destinationDir}.
    */
@@ -60,10 +69,16 @@ public class InstallTask extends DefaultTask {
     });
   }
 
+  /**
+   * @return the zip archive containing the deno executable
+   */
   public RegularFileProperty getArchive() {
     return archive;
   }
 
+  /**
+   * @return the destination directory for the deno executable
+   */
   public DirectoryProperty getDestinationDir() {
     return destinationDir;
   }

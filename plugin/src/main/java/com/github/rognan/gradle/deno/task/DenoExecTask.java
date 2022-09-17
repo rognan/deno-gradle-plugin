@@ -16,18 +16,17 @@
 
 package com.github.rognan.gradle.deno.task;
 
-import java.util.stream.Stream;
-
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.ListProperty;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.InputFile;
-import org.gradle.api.tasks.PathSensitive;
-import org.gradle.api.tasks.PathSensitivity;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
 import org.gradle.process.ExecResult;
 
+import java.util.stream.Stream;
+
+/**
+ * Execute deno with provided arguments.
+ */
 public class DenoExecTask extends DefaultTask {
   @InputFile
   @PathSensitive(PathSensitivity.RELATIVE)
@@ -36,6 +35,9 @@ public class DenoExecTask extends DefaultTask {
   @Input
   ListProperty<String> args = getProject().getObjects().listProperty(String.class);
 
+  /**
+   * @return the result of the execution
+   */
   @TaskAction
   public ExecResult run() {
     final String executable = deno.get().getAsFile().getAbsolutePath();
@@ -43,14 +45,23 @@ public class DenoExecTask extends DefaultTask {
     return getProject().exec(it -> it.commandLine(Stream.concat(Stream.of(executable), args.get().stream()).toArray()));
   }
 
+  /**
+   * @return the deno executable file
+   */
   public RegularFileProperty getDeno() {
     return deno;
   }
 
+  /**
+   * @return arguments passed to deno on execution
+   */
   public ListProperty<String> getArgs() {
     return args;
   }
 
+  /**
+   * @param args the arguments to execute deno with
+   */
   public void setArgs(ListProperty<String> args) {
     this.args = args;
   }

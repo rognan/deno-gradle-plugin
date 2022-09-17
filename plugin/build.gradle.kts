@@ -37,6 +37,8 @@ java {
   toolchain {
     languageVersion.set(jdkVersion)
   }
+  withJavadocJar()
+  withSourcesJar()
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -78,9 +80,11 @@ tasks.withType<AbstractArchiveTask>().configureEach {
   fileMode = 420
 }
 
-tasks.named<Jar>("jar") {
+tasks.withType<AbstractArchiveTask>().configureEach {
   archiveBaseName.set("deno-plugin")
+}
 
+tasks.named<Jar>("jar") {
   manifest.attributes["Implementation-Title"] = "deno-plugin"
   manifest.attributes["Implementation-Version"] = project.version
   manifest.attributes["Created-By"] =
