@@ -38,7 +38,7 @@ public class DenoExtension {
     this.version = version;
   }
 
-  public static DenoExtension create(Project project) {
+  static DenoExtension create(Project project) {
     return project.getExtensions().create(NAME, DenoExtension.class, project);
   }
 }
