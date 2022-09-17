@@ -24,14 +24,14 @@ import javax.annotation.Nonnull;
  * Provides utility functions that help identify which platform specific deno dependency to fetch
  * from the build assets available with each deno-release.
  */
-public class DependencyHelper {
+public class PlatformHelper {
   private final Properties properties;
 
-  public DependencyHelper() {
+  public PlatformHelper() {
     this(System.getProperties());
   }
 
-  DependencyHelper(Properties properties) {
+  PlatformHelper(Properties properties) {
     this.properties = properties;
   }
 
