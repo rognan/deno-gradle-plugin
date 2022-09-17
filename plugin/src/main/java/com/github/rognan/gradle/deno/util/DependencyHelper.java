@@ -17,7 +17,7 @@
 package com.github.rognan.gradle.deno.util;
 
 /**
- * Provides utility functions that helps identify which platform specific deno dependency to fetch
+ * Provides utility functions that help identify which platform specific deno dependency to fetch
  * from the build assets available with each deno-release.
  */
 public class DependencyHelper {
