@@ -22,12 +22,14 @@ import org.gradle.api.artifacts.Configuration
 import org.rognan.gradle.deno.task.DenoExecTask
 import org.rognan.gradle.deno.task.InstallTask
 import org.rognan.gradle.deno.util.DependencyHelper
+import org.rognan.gradle.deno.util.PlatformInformation
 import java.io.File
 import java.net.URI
 
 class DenoPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     val helper = DependencyHelper()
+    val platform = PlatformInformation()
 
     val extension = DenoExtension.create(project, helper)
 
@@ -81,9 +83,14 @@ class DenoPlugin : Plugin<Project> {
       it.destinationDir.set(installDir)
     }
 
+    val executable: String = when {
+      platform.isWindows() -> "deno.exe"
+      else -> "deno"
+    }
+
     project.tasks.withType(DenoExecTask::class.java).configureEach {
       it.dependsOn(installTask)
-      it.deno.set(installDir.file("deno"))
+      it.deno.set(installDir.file(executable))
     }
   }
 }

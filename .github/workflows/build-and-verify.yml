@@ -1,0 +1,30 @@
+name: "Build and Verify"
+on: [ push, pull_request ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - { os: 'macos-latest', arch: 'x64', java-version: '11' }
+          - { os: 'ubuntu-latest', arch: 'x64', java-version: '11' }
+          - { os: 'windows-latest', arch: 'x64', java-version: '11' }
+    name: Java ${{ matrix.java-version }} on ${{ matrix.os }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure JDK ${{ matrix.java-version }} (${{ matrix.arch }})
+        uses: actions/setup-java@v2
+        with:
+          architecture: ${{ matrix.arch }}
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+          cache: 'gradle'
+      - run: ./gradlew build --no-daemon
+      - name: Upload build reports
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: build-reports-${{ matrix.os }}-${{ matrix.arch }}-jdk-${{ matrix.java-version }}
+          path: |
+            build/reports
+            ./**/build/reports

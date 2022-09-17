@@ -70,7 +70,7 @@ class DependencyHelperTest {
     val properties = java.util.Properties(System.getProperties())
     properties.setProperty("os.name", os)
 
-    assertThat(DependencyHelper(properties).classifier())
+    assertThat(DependencyHelper(PlatformInformation(properties)).classifier())
       .endsWith(expected[os])
   }
 
@@ -92,7 +92,7 @@ class DependencyHelperTest {
     val properties = java.util.Properties(System.getProperties())
     properties.setProperty("os.arch", arch)
 
-    assertThat(DependencyHelper(properties).classifier())
+    assertThat(DependencyHelper(PlatformInformation(properties)).classifier())
       .startsWith(expected[arch])
   }
 
@@ -102,7 +102,7 @@ class DependencyHelperTest {
     properties.setProperty("os.arch", "aarch64")
     properties.setProperty("os.name", "Linux")
 
-    assertThat(DependencyHelper(properties).classifier())
+    assertThat(DependencyHelper(PlatformInformation(properties)).classifier())
       .isEqualTo("aarch64-unknown-linux-gnu")
   }
 
