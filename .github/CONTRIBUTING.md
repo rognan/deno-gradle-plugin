@@ -1,9 +1,6 @@
 # Contributing
 
-This project is Open Source Software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
-If you'd like to contribute, or simply want a go at the code, this document should help you get started.
-
-The rest of this document explains how to:
+This document explains how to:
 
 - contribute to this project
 - configure your development environment
@@ -15,7 +12,7 @@ The rest of this document explains how to:
 
 [GitHub issues](https://github.com/rognan/deno-gradle-plugin/issues) is used to track bugs.
 
-If you're reporting a bug, please provide as much information about your build as possible.
+If you're reporting a bug, please provide as much information about your build as possible.  
 A small sample project, or a specific guide on how to reproduce the bug, would be ideal.
 
 ## Reporting Security Vulnerabilities
@@ -26,15 +23,17 @@ Instead, follow the directions in the [security policy](SECURITY.md)
 
 ## Suggesting Features
 
-[GitHub issues](https://github.com/rognan/deno-gradle-plugin/issues) is used to track new features. When suggesting a feature, please include a description
-of the problem you need solved and any requirements. If you have a suggestion on how to solve the
-issue, please include it in the description.
+[GitHub issues](https://github.com/rognan/deno-gradle-plugin/issues) is used to track new features.
+
+When suggesting a feature, please include a description of the problem you need solved and  
+any requirements. If you have a suggestion on how to solve the issue, feel free to include  
+it in the description.
 
 ## Making Changes
 
-Before spending time coding and submitting a pull request, please reach out to talk about your
-proposed changes beforehand by opening an [issue](https://github.com/rognan/deno-gradle-plugin/issues).
-This will help minimize the amount of effort and time you put into it.
+To help minimize the amount of time and effort you put into it, please reach out to talk  
+about your proposed changes by opening an [issue](https://github.com/rognan/deno-gradle-plugin/issues).
+
 
 For any non-trivial change, create a short design document explaining:
 
@@ -51,29 +50,29 @@ In order to make changes, you'll need:
 
 - A [JDK](http://jdk.java.net/), version 11.
 - [Git](https://git-scm.com/), and a [GitHub account](https://github.com/join).
-- A text editor or Integrated Development Environment (IDE) like [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+- Your favorite text editor or IDE
 
 ## Configuring Git
 
-Before you make your first commit you'll need to configure `git`:
+Before making your first commit you'll need to configure `git`:
 
 ```shell
 git config --global user.name <your full name>
 git config --global user.email <your@email.com>
 ```
 
-These commands edit the global git config. If you wish to configure your local git repository
-config instead, navigate to the project root directory where you have your `.git/` folder, and omit
-the flag `--global` before running the commands.
+These commands edit the global git config. If you wish to configure your local git  
+repository config instead, navigate to the project root directory where you have your  
+`.git/` folder, and omit the flag `--global` before running the commands.
 
-Optionally, but highly recommended, you can enable signing your git commits.
+Optional, but recommended, you can enable signing your git commits like this:
 
 ```shell
 git config --global user.signingkey <key id>
 git config --global commit.gpgsign true
 ```
 
-For git commit signing to work as intended you'll need to install and configure GPG or S/MIME.
+For commit signing to work as intended you'll need to install and configure GPG or S/MIME.
 
 <details>
   <summary>Install and configure GPG</summary>
@@ -92,8 +91,8 @@ git config --global gpg.program gpg
 echo "export GPG_TTY=$(tty)" >> ~/.bashrc
 ```
 
-Add default key to the `gpg.conf` and `gpg-agent.conf` found in your `~/.gnupg/` folder on your
-local machine. Afterwards you may need to reload your shell and your gpg-agent.
+Add default key to the `gpg.conf` and `gpg-agent.conf` found in your `~/.gnupg/` folder on  
+your local machine. Afterwards you may need to reload your shell and your gpg-agent.
 
 Follow the [official GitHub documentation](https://help.github.com/en/articles/adding-a-new-gpg-key-to-your-github-account)
 to upload the public part of your gpg key to GitHub.
@@ -104,14 +103,14 @@ Use `git verify-commit <commit hash>` to verify your very first commit.
 <details>
   <summary>A note about ~/.gitignore</summary>
 
-You may use whichever OS or IDE you wish, just remember to add your development environment specific
-files to your global `~/.gitignore` file.
+You may use whichever OS or IDE you wish, just add your development environment specific  
+files to your global `~/.gitignore` file first.
 
-These files typically fall into these categories:
+Such files typically fall into these categories:
 
-- **Operating System specific files**; such as `*~`, `.DS_Store`, `.netrwhist`, etc.
-- **IDE specific files**; such as `.idea/`, `.metadata`, `*.sublime-*`, `.*.sw?`, etc.
-- **Non-project tooling specific files**; for tools such as `jenv`, `asdf`, `sdkman`, etc
+- **Operating System specific files**; i.e. `*~`, `.DS_Store`, `.netrwhist`.
+- **IDE specific files**; i.e. `.idea/`, `.metadata`, `*.sublime-*`, `.*.sw?`.
+- **Tooling specific files**; i.e. for `jenv`, `asdf`, `sdkman`, etc.
 </details>
 
 ## Importing into IntelliJ IDEA
@@ -139,16 +138,15 @@ All code contributions should contain the following:
 - Integration test coverage of the bug/feature at the level of build execution.
 - Documentation
 
-The CI will verify that your code runs on all supported Java versions and operating systems.
-
 ## Authoring Commits
 
-- Keep commits discrete: avoid including multiple unrelated changes in a single commit
-- Keep commits self-contained: avoid spreading a single change across multiple commits.
+Keep commits discrete and self-contained:
+- Avoid including multiple unrelated changes in a single commit
+- Avoid spreading a single change across multiple commits.  
   A single commit should make sense in isolation
 
-In order for your contributions to be accepted, you must [sign off](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff)
-your Git commits to indicate that you agree to the terms of [Developer Certificate of Origin](https://developercertificate.org/).
+In order for your contributions to be accepted, you must [sign off](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff) your Git commits to  
+indicate you agree to the terms of [Developer Certificate of Origin](https://developercertificate.org/).
 
 ## Writing Commit Messages
 
@@ -168,13 +166,13 @@ _Add, Remove, Fix, Enable, Disable, Format, Migrate, Upgrade, Extract_.
 
 ## Building from Source
 
-The project should be built using a JDK version 11, and can be built from the CLI using the included
-Gradle Wrapper scripts (`./gradlew` or `./gradlew.bat`)
+The project can be built from the command line using the included Gradle Wrapper scripts  
+`./gradlew` or `./gradlew.bat`.
 
 ## Submitting Changes
 
-After you submit your pull request, someone will review it. It's normal that this process can take
-some time, so don't get discouraged by any change requests.
+When you submit your pull request, someone will review it. It's normal that this process  
+can take some time, so don't get discouraged by any change requests.
 
 ## Getting Help
 
