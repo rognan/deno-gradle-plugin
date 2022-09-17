@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: 'macos-latest', arch: 'x64', toolchain-jdk: '11', gradle-jdk: '17', gradle-version: '7.3' }
-          - { os: 'ubuntu-latest', arch: 'x64', toolchain-jdk: '11', gradle-jdk: '17', gradle-version: '7.3' }
-          - { os: 'windows-latest', arch: 'x64', toolchain-jdk: '11', gradle-jdk: '17', gradle-version: '7.3' }
+          - { os: 'macos-latest', arch: 'x64', toolchain-jdk: '17', gradle-jdk: '17', gradle-version: '7.3' }
+          - { os: 'ubuntu-latest', arch: 'x64', toolchain-jdk: '17', gradle-jdk: '17', gradle-version: '7.3' }
+          - { os: 'windows-latest', arch: 'x64', toolchain-jdk: '17', gradle-jdk: '17', gradle-version: '7.3' }
     name: >
       Gradle ${{ matrix.gradle-version }} w/JDK ${{ matrix.gradle-jdk }}
       on ${{ matrix.os }} (${{ matrix.arch }}) and toolchain JDK ${{ matrix.toolchain-jdk}}
