@@ -1,3 +1,5 @@
+![Build](https://github.com/rognan/deno-gradle-plugin/actions/workflows/main.yml/badge.svg)
+
 # Gradle Plugin for Deno
 
 This plugin enables you to use [Deno](https://deno.land/) as part of your Gradle build.
