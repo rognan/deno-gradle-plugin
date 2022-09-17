@@ -5,7 +5,7 @@
 
 # Gradle Plugin for Deno
 
-This plugin enables you to use [Deno](https://deno.land/) as part of your Gradle build.
+This plugin enables you to use [Deno][0] as part of your [Gradle][1] build.
 
 Example:
 
@@ -26,3 +26,6 @@ tasks.register<org.rognan.gradle.deno.task.DenoExecTask>("helloWorld") {
   args.set(listOf("eval", "console.log('Hello, World!');"))
 }
 ```
+
+[0]: https://deno.land/
+[1]: https://gradle.org/
