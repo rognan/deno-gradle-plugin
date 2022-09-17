@@ -35,13 +35,7 @@ public class DependencyHelper {
 
   @Nonnull
   public String getDependencyNotation(String version) {
-    return String.format("%s:%s:%s:%s@%s",
-                         organization(),
-                         module(),
-                         version,
-                         classifier(),
-                         extension()
-    );
+    return String.format("denoland:deno:%s:%s@zip", version, classifier());
   }
 
   @Nonnull
@@ -55,17 +49,5 @@ public class DependencyHelper {
 
   private String classifier() {
     return String.format("%s-%s", platform.arch(), platform.os());
-  }
-
-  private String organization() {
-    return "denoland";
-  }
-
-  private String module() {
-    return "deno";
-  }
-
-  private String extension() {
-    return "zip";
   }
 }
