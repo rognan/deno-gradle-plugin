@@ -1,4 +1,4 @@
-![Build](https://github.com/rognan/deno-gradle-plugin/actions/workflows/main.yml/badge.svg)
+[![Build](https://github.com/rognan/deno-gradle-plugin/actions/workflows/main.yml/badge.svg)](https://github.com/rognan/deno-gradle-plugin/actions?query=branch%3Amain+event%3Apush)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 
 **NB! This plugin is not yet released.**
