@@ -1,3 +1,10 @@
+buildscript {
+  dependencyLocking {
+    lockAllConfigurations()
+    lockMode.set(LockMode.STRICT)
+  }
+}
+
 plugins {
   id("java-gradle-plugin")
   id("org.jetbrains.kotlin.jvm") version "1.6.0"
@@ -6,6 +13,11 @@ plugins {
 
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
+
+dependencyLocking {
+  lockAllConfigurations()
+  lockMode.set(LockMode.STRICT)
+}
 
 gradlePlugin {
   testSourceSets(functionalTestSourceSet)
@@ -42,6 +54,15 @@ val functionalTest by tasks.registering(Test::class) {
 
 tasks.check {
   dependsOn(functionalTest)
+}
+
+tasks.withType<AbstractArchiveTask>().configureEach {
+  isReproducibleFileOrder = true
+  isPreserveFileTimestamps = false
+
+  // 755 and 644, respectively, when converted from base-10 (decimal) to base-8 (octal)
+  dirMode = 493
+  fileMode = 420
 }
 
 dependencies {
