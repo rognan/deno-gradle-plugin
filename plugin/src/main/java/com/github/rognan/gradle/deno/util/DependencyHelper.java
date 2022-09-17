@@ -44,6 +44,11 @@ public class DependencyHelper {
     );
   }
 
+  @Nonnull
+  public String getExecutableName() {
+    return platform.isWindows() ? "deno.exe" : "deno";
+  }
+
   public String getInstallDirName(String version) {
     return String.format("v%s-%s", version, classifier());
   }
