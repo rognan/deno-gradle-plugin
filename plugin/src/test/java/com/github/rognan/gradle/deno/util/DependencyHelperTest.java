@@ -39,7 +39,7 @@ public class DependencyHelperTest {
     properties.setProperty("os.name", matrix.os);
     properties.setProperty("os.arch", matrix.arch);
 
-    DependencyHelper helper = new DependencyHelper(new PlatformInformation(properties));
+    DependencyHelper helper = new DependencyHelper(properties);
 
     assertThat(helper.getDependencyNotation(A_VERSION))
       .isEqualTo(matrix.expected);
@@ -51,7 +51,7 @@ public class DependencyHelperTest {
     Properties properties = new Properties(System.getProperties());
     properties.setProperty("os.name", matrix.os);
 
-    DependencyHelper helper = new DependencyHelper(new PlatformInformation(properties));
+    DependencyHelper helper = new DependencyHelper(properties);
 
     assertThat(helper.getExecutableName())
       .isEqualTo(matrix.expected);

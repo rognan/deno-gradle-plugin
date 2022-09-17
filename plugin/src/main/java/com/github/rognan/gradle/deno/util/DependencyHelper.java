@@ -16,6 +16,8 @@
 
 package com.github.rognan.gradle.deno.util;
 
+import java.util.Properties;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -23,14 +25,14 @@ import javax.annotation.Nonnull;
  * from the build assets available with each deno-release.
  */
 public class DependencyHelper {
-  private final PlatformInformation platform;
+  private final Properties properties;
 
   public DependencyHelper() {
-    this(new PlatformInformation());
+    this(System.getProperties());
   }
 
-  DependencyHelper(PlatformInformation platform) {
-    this.platform = platform;
+  DependencyHelper(Properties properties) {
+    this.properties = properties;
   }
 
   @Nonnull
@@ -40,7 +42,7 @@ public class DependencyHelper {
 
   @Nonnull
   public String getExecutableName() {
-    return platform.isWindows() ? "deno.exe" : "deno";
+    return isWindows() ? "deno.exe" : "deno";
   }
 
   public String getInstallDirName(String version) {
@@ -48,6 +50,49 @@ public class DependencyHelper {
   }
 
   private String classifier() {
-    return String.format("%s-%s", platform.arch(), platform.os());
+    return String.format("%s-%s", arch(), os());
+  }
+
+  private String arch() {
+    String arch = properties.getProperty("os.arch");
+
+    if (arch == null || arch.trim().equals("")) {
+      arch = System.getProperty("os.arch");
+    }
+
+    arch = arch.toLowerCase();
+
+    if (arch.contains("amd64") || arch.contains("x86_64")) {
+      return "x86_64";
+    }
+    else if (arch.contains("aarch64")) {
+      return "aarch64";
+    }
+    else {
+      throw new IllegalStateException("Unsupported OS Architecture: " + arch);
+    }
+  }
+
+  private String os() {
+    String os = properties.getProperty("os.name");
+
+    if (os == null || os.trim().equals("")) {
+      os = System.getProperty("os.name");
+    }
+
+    os = os.toLowerCase();
+    if (os.contains("mac")) {
+      return "apple-darwin";
+    } else if (os.contains("win")) {
+      return "pc-windows-msvc";
+    } else if (os.contains("nix") || os.contains("nux")|| os.contains("aix")|| os.contains("bsd")) {
+      return "unknown-linux-gnu";
+    } else {
+      throw new IllegalStateException("Unsupported OS: " + os);
+    }
+  }
+
+  private boolean isWindows() {
+    return os().equals("pc-windows-msvc");
   }
 }
