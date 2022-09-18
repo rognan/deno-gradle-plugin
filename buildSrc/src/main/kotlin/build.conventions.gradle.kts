@@ -15,6 +15,7 @@
  */
 
 plugins {
+  id("build.ide-conventions")
   id("com.diffplug.spotless-changelog")
 }
 

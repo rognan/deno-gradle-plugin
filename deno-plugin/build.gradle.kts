@@ -7,7 +7,7 @@ buildscript {
 
 plugins {
   id("java-gradle-plugin")
-  id("build.versioning-conventions")
+  id("build.conventions")
 }
 
 val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)

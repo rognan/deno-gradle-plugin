@@ -6,17 +6,8 @@ plugins {
   id("org.jetbrains.gradle.plugin.idea-ext")
 }
 
-if (project != rootProject) {
-  // The plugin is applied to all subprojects, so the idea extension, as well as custom task
-  // configuration, will be available for all projects that needs it.
-  throw RuntimeException("This plugin may only be applied to the root project of your build.")
-}
-
-configure(subprojects) {
-  plugins.apply("org.jetbrains.gradle.plugin.idea-ext")
-}
-
-if (idea.project != null) { // May be null during buildscript compilation
+// idea.project may be null during buildscript compilation
+if (idea.project != null && project == rootProject) {
   idea {
     project {
       settings {
