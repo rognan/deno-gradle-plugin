@@ -42,10 +42,23 @@ if (idea.project != null && project == rootProject) {
 
 val ideaInstructionsUri: java.net.URI = uri("https://github.com/rognan/deno-gradle-plugin/wiki/Working-with-the-Code#importing-into-intellij-idea")
 
-tasks.idea {
-  doFirst {
-    // This disables the `idea`-task
-    throw RuntimeException("To import in IntelliJ IDEA, follow the instructions in $ideaInstructionsUri")
+if (idea.module != null) {
+  tasks.named("ideaModule") {
+    enabled = false
+  }
+}
+
+if (idea.project != null) {
+  setOf("ideaProject", "ideaWorkspace").forEach { taskName ->
+    tasks.named(taskName) {
+      enabled = false
+    }
+  }
+
+  tasks.named("idea") {
+    doFirst {
+      throw RuntimeException("To import in IntelliJ IDEA, follow the instructions in $ideaInstructionsUri")
+    }
   }
 }
 
