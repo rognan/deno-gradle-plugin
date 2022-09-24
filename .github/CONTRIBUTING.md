@@ -12,7 +12,7 @@ This document explains how to:
 
 [GitHub issues](https://github.com/rognan/deno-gradle-plugin/issues) is used to track bugs.
 
-If you're reporting a bug, please provide as much information about your build as possible.  
+If you're reporting a bug, please provide as much information about your build as possible.
 A small sample project, or a specific guide on how to reproduce the bug, would be ideal.
 
 ## Reporting Security Vulnerabilities
@@ -25,13 +25,13 @@ Instead, follow the directions in the [security policy](SECURITY.md)
 
 [GitHub issues](https://github.com/rognan/deno-gradle-plugin/issues) is used to track new features.
 
-When suggesting a feature, please include a description of the problem you need solved and  
-any requirements. If you have a suggestion on how to solve the issue, feel free to include  
+When suggesting a feature, please include a description of the problem you need solved and
+any requirements. If you have a suggestion on how to solve the issue, feel free to include
 it in the description.
 
 ## Making Changes
 
-To help minimize the amount of time and effort you put into it, please reach out to talk  
+To help minimize the amount of time and effort you put into it, please reach out to talk
 about your proposed changes by opening an [issue](https://github.com/rognan/deno-gradle-plugin/issues).
 
 
@@ -61,8 +61,8 @@ git config --global user.name <your full name>
 git config --global user.email <your@email.com>
 ```
 
-These commands edit the global git config. If you wish to configure your local git  
-repository config instead, navigate to the project root directory where you have your  
+These commands edit the global git config. If you wish to configure your local git
+repository config instead, navigate to the project root directory where you have your
 `.git/` folder, and omit the flag `--global` before running the commands.
 
 Optional, but recommended, you can enable signing your git commits like this:
@@ -91,7 +91,7 @@ git config --global gpg.program gpg
 echo "export GPG_TTY=$(tty)" >> ~/.bashrc
 ```
 
-Add default key to the `gpg.conf` and `gpg-agent.conf` found in your `~/.gnupg/` folder on  
+Add default key to the `gpg.conf` and `gpg-agent.conf` found in your `~/.gnupg/` folder on
 your local machine. Afterwards you may need to reload your shell and your gpg-agent.
 
 Follow the [official GitHub documentation](https://help.github.com/en/articles/adding-a-new-gpg-key-to-your-github-account)
@@ -103,7 +103,7 @@ Use `git verify-commit <commit hash>` to verify your very first commit.
 <details>
   <summary>A note about ~/.gitignore</summary>
 
-You may use whichever OS or IDE you wish, just add your development environment specific  
+You may use whichever OS or IDE you wish, just add your development environment specific
 files to your global `~/.gitignore` file first.
 
 Such files typically fall into these categories:
@@ -142,10 +142,10 @@ All code contributions should contain the following:
 
 Keep commits discrete and self-contained:
 - Avoid including multiple unrelated changes in a single commit
-- Avoid spreading a single change across multiple commits.  
+- Avoid spreading a single change across multiple commits.
   A single commit should make sense in isolation
 
-In order for your contributions to be accepted, you must [sign off](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff) your Git commits to  
+In order for your contributions to be accepted, you must [sign off](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff) your Git commits to
 indicate you agree to the terms of [Developer Certificate of Origin](https://developercertificate.org/).
 
 ## Writing Commit Messages
@@ -166,12 +166,12 @@ _Add, Remove, Fix, Enable, Disable, Format, Migrate, Upgrade, Extract_.
 
 ## Building from Source
 
-The project can be built from the command line using the included Gradle Wrapper scripts  
+The project can be built from the command line using the included Gradle Wrapper scripts
 `./gradlew` or `./gradlew.bat`.
 
 ## Submitting Changes
 
-When you submit your pull request, someone will review it. It's normal that this process  
+When you submit your pull request, someone will review it. It's normal that this process
 can take some time, so don't get discouraged by any change requests.
 
 ## Getting Help

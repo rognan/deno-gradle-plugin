@@ -1,5 +1,16 @@
-[![Build](https://github.com/rognan/deno-gradle-plugin/actions/workflows/main.yml/badge.svg)](https://github.com/rognan/deno-gradle-plugin/actions?query=branch%3Amain+event%3Apush)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
+<!---freshmark shields
+output = [
+  link(shield('license', 'License', 'Apache 2.0', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
+  link(shield('release', 'Latest', '{{version}}', 'blue'), 'CHANGELOG.md'),
+  '',
+  link(image('build', 'https://github.com/{{org}}/{{name}}/actions/workflows/main.yml/badge.svg'), 'https://github.com/{{org}}/{{name}}/actions?query=branch%3A{{branch}}+event%3Apush'),
+].join('\n');
+-->
+[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
+[![release](https://img.shields.io/badge/Latest-unrealeased-blue.svg)](CHANGELOG.md)
+
+[![build](https://github.com/rognan/deno-gradle-plugin/actions/workflows/main.yml/badge.svg)](https://github.com/rognan/deno-gradle-plugin/actions?query=branch%3Amain+event%3Apush)
+<!---freshmark /shields -->
 
 **NB! This plugin is not yet released.**
 

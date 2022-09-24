@@ -69,4 +69,6 @@ dependencies {
   // The 1.0 version of idea-ext requires IntelliJ IDEA ≥ 2020.3
   implementation("gradle.plugin.org.jetbrains.gradle.plugin.idea-ext:gradle-idea-ext:1.1.6")
   implementation("com.diffplug.spotless-changelog:spotless-changelog-plugin-gradle:2.4.0")
+  implementation("com.diffplug.spotless:spotless-plugin-gradle:6.11.0")
+  runtimeOnly("org.openjdk.nashorn:nashorn-core:15.4")
 }

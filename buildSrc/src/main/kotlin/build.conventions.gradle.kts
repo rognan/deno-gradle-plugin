@@ -1,3 +1,6 @@
+import com.diffplug.gradle.spotless.FreshMarkExtension
+import com.diffplug.gradle.spotless.SpotlessApply
+
 /*
  * Copyright © 2021-2022 the original author or authors.
  *
@@ -17,6 +20,23 @@
 plugins {
   id("build.ide-conventions")
   id("com.diffplug.spotless-changelog")
+  id("com.diffplug.spotless")
+}
+
+spotless {
+  freshmark {
+    target("**/*.md")
+    indentWithSpaces(2)
+    trimTrailingWhitespace()
+    endWithNewline()
+    properties {
+      put("org", "rognan")
+      put("name", "deno-gradle-plugin")
+      put("pluginId", "com.github.rognan.deno-plugin")
+      put("branch", "main")
+      put("version", spotlessChangelog.versionLast ?: "unrealeased")
+    }
+  }
 }
 
 spotlessChangelog {

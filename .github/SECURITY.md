@@ -15,8 +15,8 @@ Example details to include:
 
 ## Supported Versions
 
-Vulnerability fixes are created as patch releases on the latest feature  
-release (major or minor). This project makes no guarantees for any  
+Vulnerability fixes are created as patch releases on the latest feature
+release (major or minor). This project makes no guarantees for any
 older versions to receive updates.
 
 There are no "Long Term Support" versions.
