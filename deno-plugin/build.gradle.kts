@@ -10,8 +10,8 @@ plugins {
   id("build.conventions")
 }
 
-val jdkVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)
-val jvmReleaseTarget: JavaLanguageVersion = JavaLanguageVersion.of(8)
+val jvmTestVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)
+val jvmReleaseVersion: JavaLanguageVersion = JavaLanguageVersion.of(8)
 val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
@@ -33,28 +33,34 @@ gradlePlugin {
 
 java {
   toolchain {
-    languageVersion.set(jdkVersion)
+    languageVersion.set(jvmReleaseVersion)
   }
   withJavadocJar()
   withSourcesJar()
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  options.release.set(jvmReleaseTarget.asInt())
+  javaCompiler.set(javaToolchains.compilerFor {
+    languageVersion.set(jvmReleaseVersion)
+  })
 }
 
 tasks.named<JavaCompile>("compileTestJava") {
-  options.release.set(jdkVersion.asInt())
+  javaCompiler.set(javaToolchains.compilerFor {
+    languageVersion.set(jvmTestVersion)
+  })
 }
 
 tasks.named<JavaCompile>("compileFunctionalTestJava") {
-  options.release.set(jdkVersion.asInt())
+  javaCompiler.set(javaToolchains.compilerFor {
+    languageVersion.set(jvmTestVersion)
+  })
 }
 
 tasks.withType<Test>().configureEach {
   useJUnitPlatform()
   javaLauncher.set(javaToolchains.launcherFor {
-    languageVersion.set(jdkVersion)
+    languageVersion.set(jvmTestVersion)
   })
 }
 
