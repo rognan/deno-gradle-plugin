@@ -43,6 +43,11 @@ tasks.withType<JavaCompile>().configureEach {
   javaCompiler.set(javaToolchains.compilerFor {
     languageVersion.set(jvmReleaseVersion)
   })
+
+  options.encoding = "UTF-8"
+  options.isIncremental = true
+  options.compilerArgs = listOf("-Xlint:all", "-Werror")
+  options.isDebug = !env("CI").isNullOrEmpty()
 }
 
 tasks.named<JavaCompile>("compileTestJava") {
@@ -110,3 +115,5 @@ dependencies {
 repositories {
   mavenCentral()
 }
+
+fun env(variable: String) = System.getenv(variable)
