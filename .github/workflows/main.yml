@@ -28,7 +28,7 @@ jobs:
             ${{ matrix.release-target-jdk }}
             ${{ matrix.gradle-jdk }}
       - name: Build project
-        uses: gradle/gradle-build-action@v2.2.5
+        uses: gradle/gradle-build-action@v2.3.1
         with:
           # Only write to the cache on the 'main' branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
