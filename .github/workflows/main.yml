@@ -10,29 +10,23 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: 'macos-latest', arch: 'x64', toolchain-jdk: '17', gradle-jdk: '17', gradle-version: '7.3' }
-          - { os: 'ubuntu-latest', arch: 'x64', toolchain-jdk: '17', gradle-jdk: '17', gradle-version: '7.3' }
-          - { os: 'windows-latest', arch: 'x64', toolchain-jdk: '17', gradle-jdk: '17', gradle-version: '7.3' }
+          - { os: 'macos-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '7.5.1' }
+          - { os: 'ubuntu-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '7.5.1' }
+          - { os: 'windows-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '7.5.1' }
     name: >
-      Gradle ${{ matrix.gradle-version }} w/JDK ${{ matrix.gradle-jdk }}
-      on ${{ matrix.os }} (${{ matrix.arch }}) and toolchain JDK ${{ matrix.toolchain-jdk}}
+      Gradle ${{ matrix.gradle-version }} w/JDK ${{ matrix.gradle-jdk }} on
+      ${{ matrix.os }} (${{ matrix.arch }}) using toolchain JDK ${{ matrix.release-target-jdk}}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Configure JDK ${{ matrix.gradle-jdk }} (${{ matrix.arch }})
-        id: configure-gradle-jdk
-        uses: actions/setup-java@v3
+      - name: Configure JDK ${{ matrix.gradle-jdk }} and ${{ matrix.release-target-jdk }} (${{ matrix.arch }})
+        uses: actions/setup-java@v3.5.0
         with:
           architecture: ${{ matrix.arch }}
           distribution: 'temurin'
-          java-version: ${{ matrix.gradle-jdk }}
-      - name: Configure JDK ${{ matrix.toolchain-jdk }} (${{ matrix.arch }})
-        id: configure-toolchain-jdk
-        uses: actions/setup-java@v3
-        with:
-          architecture: ${{ matrix.arch }}
-          distribution: 'temurin'
-          java-version: ${{ matrix.toolchain-jdk }}
+          java-version: |
+            ${{ matrix.release-target-jdk }}
+            ${{ matrix.gradle-jdk }}
       - name: Build project
         uses: gradle/gradle-build-action@v2.2.5
         with:
@@ -40,15 +34,14 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
           gradle-version: ${{ matrix.gradle-version }}
           arguments: >
-            build --scan
-            -Dorg.gradle.java.installations.auto-detect=false
+            build --scan --info --console plain
+            -Dorg.gradle.java.installations.auto-detect=true
             -Dorg.gradle.java.installations.auto-download=false
-            -Dorg.gradle.java.installations.paths=${{ steps.configure-gradle-jdk.outputs.path }},${{ steps.configure-toolchain-jdk.outputs.path }}
       - name: Upload build reports
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: build-reports-${{ matrix.os }}-${{ matrix.arch }}-gradle-jdk-${{ matrix.gradle-jdk }}-toolchain-jdk-${{ matrix.toolchain-jdk }}
+          name: build-reports-${{ matrix.os }}-${{ matrix.arch }}-gradle-jdk-${{ matrix.gradle-jdk }}-release-target-jdk-${{ matrix.release-target-jdk }}
           path: |
             build/reports
             ./**/build/reports
