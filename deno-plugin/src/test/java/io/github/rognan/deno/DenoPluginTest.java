@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 the original author or authors.
+ * Copyright © 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.rognan.gradle.deno;
+package io.github.rognan.deno;
 
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -30,7 +30,7 @@ public class DenoPluginTest {
   @BeforeEach
   void setUp() {
     project = ProjectBuilder.builder().build();
-    project.getPlugins().apply("com.github.rognan.deno-plugin");
+    project.getPlugins().apply("io.github.rognan.deno");
   }
 
   @Test

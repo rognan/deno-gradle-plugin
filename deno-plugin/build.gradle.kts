@@ -23,11 +23,11 @@ dependencyLocking {
 gradlePlugin {
   testSourceSets(functionalTestSourceSet)
 
-  plugins.create("denoPlugin") {
-    id = "com.github.rognan.deno-plugin"
+  plugins.create("deno") {
+    id = "io.github.rognan.deno"
     displayName = "Deno Gradle Plugin"
     description = "Use Deno, a runtime for JavaScript and Typescript, as part of your Gradle build."
-    implementationClass = "com.github.rognan.gradle.deno.DenoPlugin"
+    implementationClass = "io.github.rognan.deno.DenoPlugin"
   }
 }
 
@@ -90,11 +90,11 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 }
 
 tasks.withType<AbstractArchiveTask>().configureEach {
-  archiveBaseName.set("deno-plugin")
+  archiveBaseName.set("deno-gradle-plugin")
 }
 
 tasks.named<Jar>("jar") {
-  manifest.attributes["Implementation-Title"] = "deno-plugin"
+  manifest.attributes["Implementation-Title"] = "deno-gradle-plugin"
   manifest.attributes["Implementation-Version"] = project.version
   manifest.attributes["Created-By"] =
     "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"

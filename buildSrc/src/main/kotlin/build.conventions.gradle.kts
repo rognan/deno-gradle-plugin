@@ -32,7 +32,7 @@ spotless {
     properties {
       put("org", "rognan")
       put("name", "deno-gradle-plugin")
-      put("pluginId", "com.github.rognan.deno-plugin")
+      put("pluginId", "io.github.rognan.deno")
       put("branch", "main")
       put("version", spotlessChangelog.versionLast ?: "unrealeased")
     }
@@ -44,5 +44,5 @@ spotlessChangelog {
   enforceCheck(project == rootProject)
 }
 
-project.group = "com.github.rognan.gradle"
+project.group = "io.github.rognan.deno"
 project.version = project.spotlessChangelog.versionNext

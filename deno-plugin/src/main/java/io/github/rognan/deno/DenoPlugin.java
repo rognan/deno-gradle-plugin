@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 the original author or authors.
+ * Copyright © 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.rognan.gradle.deno;
+package io.github.rognan.deno;
 
-import com.github.rognan.gradle.deno.task.DenoExecTask;
-import com.github.rognan.gradle.deno.task.InstallTask;
-import com.github.rognan.gradle.deno.util.PlatformHelper;
+import io.github.rognan.deno.task.DenoExecTask;
+import io.github.rognan.deno.task.InstallTask;
+import io.github.rognan.deno.util.PlatformHelper;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -36,18 +36,17 @@ import java.net.URI;
 
 /**
  * Enable the use of <a href="https://deno.land/">Deno</a> in your Gradle build.
- *
  * Example:
  * <pre>
  *   plugins {
- *     id("com.github.rognan.deno-plugin") version "0.1.0"
+ *     id("io.github.rognan.deno") version "0.1.0"
  *   }
  *
  *   deno {
  *     version.set("1.19.1")
  *   }
  *
- *   tasks.register&#60;com.github.rognan.gradle.deno.task.DenoExecTask&#62;("helloWorld") {
+ *   tasks.register&#60;io.github.rognan.deno.task.DenoExecTask&#62;("helloWorld") {
  *     args.set(listOf("eval", "console.log('Hello, World!');"))
  *   }
  * </pre>
@@ -60,7 +59,7 @@ public class DenoPlugin implements Plugin<Project> {
     ConfigurationContainer configurations = project.getConfigurations();
 
     Configuration denoConfiguration = configurations.create("deno", (configuration) -> {
-      configuration.setDescription("Configuration for 'com.github.rognan.gradle.deno-plugin'");
+      configuration.setDescription("Configuration for 'io.github.rognan.deno'");
       configuration.setCanBeConsumed(false);
       configuration.setCanBeResolved(true);
       configuration.setTransitive(false);
@@ -76,7 +75,7 @@ public class DenoPlugin implements Plugin<Project> {
     final RepositoryHandler repositories = project.getRepositories();
 
     repositories.ivy((repository) -> {
-      repository.setName("com.github.rognan.gradle.deno:denoland@github");
+      repository.setName("io.github.rognan.deno:denoland@github");
       repository.setUrl(URI.create("https://github.com/"));
 
       repository.patternLayout((layout) -> layout.artifact(

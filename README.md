@@ -22,7 +22,7 @@ Example:
 
 ```kotlin
 plugins {
-  id("com.github.rognan.deno-plugin") version "0.1.0"
+  id("io.github.rognan.deno") version "0.1.0"
 }
 
 deno {
@@ -32,7 +32,7 @@ deno {
 }
 
 // arguments are forwarded directly to deno
-tasks.register<com.github.rognan.gradle.deno.task.DenoExecTask>("helloWorld") {
+tasks.register<task.io.github.rognan.deno.DenoExecTask>("helloWorld") {
   args.set(listOf("eval", "console.log('Hello, World!');"))
 }
 ```
