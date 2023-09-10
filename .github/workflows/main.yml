@@ -39,7 +39,7 @@ jobs:
             -Dorg.gradle.java.installations.auto-download=false
       - name: Upload build reports
         uses: actions/upload-artifact@v3
-        if: always()
+        if: env.ACT != 'true' && always()
         with:
           name: build-reports-${{ matrix.os }}-${{ matrix.arch }}-gradle-jdk-${{ matrix.gradle-jdk }}-release-target-jdk-${{ matrix.release-target-jdk }}
           path: |
