@@ -60,6 +60,11 @@ include("deno-plugin")
 rootProject.name = "deno-gradle-plugin"
 
 fun env(variable: String) = System.getenv(variable)
-fun linkToGitHubTagOrBranch() = env("GITHUB_SERVER_URL") + // i.e. `https://github.com`
-  "/${env("GITHUB_REPOSITORY")}" + // i.e. `rognan/deno-gradle-plugin`
-  "/tree/${env("GITHUB_REF_NAME")}" // i.e. `tree/main`
+fun envOrDefault(key: String, defaultValue: String): String = System.getenv()
+  .getOrDefault(key, defaultValue)
+  .ifBlank { defaultValue }
+
+fun linkToGitHubTagOrBranch() =
+  envOrDefault("GITHUB_SERVER_URL", "https://github.com") +
+  "/${envOrDefault("GITHUB_REPOSITORY", "rognan/deno-gradle-plugin")}" +
+  "/tree/${envOrDefault("GITHUB_HEAD_REF", "main")}"
