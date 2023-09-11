@@ -106,10 +106,12 @@ tasks.named<Jar>("jar") {
 
 dependencies {
   testImplementation("org.assertj:assertj-core:3.24.2")
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-  testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
-  "functionalTestRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+  testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.0")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+  "functionalTestRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.10.0")
+  "functionalTestRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 repositories {

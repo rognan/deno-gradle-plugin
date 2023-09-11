@@ -5,7 +5,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-  id("com.gradle.enterprise") version "3.7.2"
+  id("com.gradle.enterprise") version "3.14.1"
 }
 
 val isCiServer = !env("CI").isNullOrEmpty()
