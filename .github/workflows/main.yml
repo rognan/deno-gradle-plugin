@@ -34,7 +34,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
           gradle-version: ${{ matrix.gradle-version }}
           arguments: >
-            build --scan --info --console plain
+            build --info --console plain
             -Dorg.gradle.java.installations.auto-detect=true
             -Dorg.gradle.java.installations.auto-download=false
       - name: Upload build reports

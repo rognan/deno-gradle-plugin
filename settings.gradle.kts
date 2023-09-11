@@ -8,20 +8,23 @@ plugins {
   id("com.gradle.enterprise") version "3.14.1"
 }
 
-val isCiServer = !env("CI").isNullOrEmpty()
-
 gradleEnterprise {
   buildScan {
     termsOfServiceUrl = "https://gradle.com/terms-of-service"
 
-    tag(if(isCiServer) "CI" else "Local")
+    val isCiServer = !env("CI").isNullOrEmpty()
+    val isAct = env("ACT").toBoolean()
+    publishAlwaysIf(isCiServer && !isAct)
+
+    when {
+      isAct -> tag("ACT")
+      isCiServer && !isAct -> tag("CI")
+      else -> tag("local")
+    }
 
     if (isCiServer) {
       termsOfServiceAgree = "yes"
-      publishAlways()
-
       link("VCS", linkToGitHubTagOrBranch())
-
       tag(env("GITHUB_REF_TYPE")) // branch or tag
       value("Commit", env("GITHUB_SHA"))
       value("Workflow", env("GITHUB_WORKFLOW"))
@@ -44,13 +47,9 @@ gradleEnterprise {
     }
 
     obfuscation {
-      if (isCiServer) {
-        username { "github" }
-      } else {
-        username { "[hidden]" }
-        hostname { "[hidden]" }
-        ipAddresses { listOf("[hidden]") }
-      }
+      username { "[hidden]" }
+      hostname { "[hidden]" }
+      ipAddresses { listOf("[hidden]") }
     }
   }
 }
