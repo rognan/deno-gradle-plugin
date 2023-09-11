@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: 'macos-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '8.1.1' }
-          - { os: 'ubuntu-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '8.1.1' }
-          - { os: 'windows-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '8.1.1' }
+          - { os: 'macos-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '8.3' }
+          - { os: 'ubuntu-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '8.3' }
+          - { os: 'windows-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '17', gradle-version: '8.3' }
     name: >
       Gradle ${{ matrix.gradle-version }} w/JDK ${{ matrix.gradle-jdk }} on
       ${{ matrix.os }} (${{ matrix.arch }}) using toolchain JDK ${{ matrix.release-target-jdk}}
@@ -34,7 +34,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
           gradle-version: ${{ matrix.gradle-version }}
           arguments: >
-            build --scan --info --console plain
+            build --info --console plain
             -Dorg.gradle.java.installations.auto-detect=true
             -Dorg.gradle.java.installations.auto-download=false
       - name: Upload build reports
