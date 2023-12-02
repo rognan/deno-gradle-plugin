@@ -73,12 +73,8 @@ public class DenoPluginFunctionalTest {
   }
 
   @ParameterizedTest
-  @ValueSource(
-    strings = {
-      "7.3.3"
-    }
-  )
-  void i_can_execute_deno_after_applying_the_plugin(String gradleVersion) {
+  @ValueSource(strings = {"7.6.3", "8.5"})
+  void i_can_execute_the_plugin_with_specified_gradle_version(String gradleVersion) {
     var buildResult = GradleRunner.create()
       .withGradleVersion(gradleVersion)
       .withPluginClasspath()
