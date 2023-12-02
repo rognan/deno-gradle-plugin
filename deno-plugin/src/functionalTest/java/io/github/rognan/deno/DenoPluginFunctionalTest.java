@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DenoPluginFunctionalTest {
   @TempDir
   File projectDir;
-  String denoVersion = "1.14.2";
+  String denoVersion = "1.38.4";
 
   @BeforeEach
   void setUp() throws IOException, URISyntaxException {
