@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -33,6 +32,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,29 +47,8 @@ public class DenoPluginFunctionalTest {
     URI buildFile = new File(projectDir, "build.gradle.kts").toURI();
     URI cacheDir = new File(projectDir, ".cache").toURI();
 
-    String settingsContent = readFile("templates/settings.gradle.kts", UTF_8);
-    String buildContent = readFile("templates/build.gradle.kts", UTF_8);
-
-    Files.writeString(
-      Path.of(settingsFile),
-      String.format(settingsContent, cacheDir),
-      UTF_8,
-      StandardOpenOption.CREATE,StandardOpenOption.WRITE,StandardOpenOption.DSYNC
-    );
-
-    Files.writeString(
-      Path.of(buildFile),
-      String.format(buildContent, denoVersion),
-      UTF_8,
-      StandardOpenOption.CREATE,StandardOpenOption.WRITE,StandardOpenOption.DSYNC
-    );
-  }
-
-  private String readFile(String template, Charset charset) throws IOException, URISyntaxException {
-    ClassLoader classLoader = getClass().getClassLoader();
-    URI resource = classLoader.getResource(template).toURI();
-
-    return Files.readString(Path.of(resource), charset);
+    write(settingsFile, content("templates/settings.gradle.kts", cacheDir));
+    write(buildFile, content("templates/build.gradle.kts", denoVersion));
   }
 
   @ParameterizedTest
@@ -90,6 +69,27 @@ public class DenoPluginFunctionalTest {
     assertThat(execTask.getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
 
     assertThat(buildResult.getOutput()).contains("deno " + denoVersion);
+  }
 
+  private String read(String template) throws IOException, URISyntaxException {
+    ClassLoader classLoader = getClass().getClassLoader();
+    Path resource = Path.of(classLoader.getResource(template).toURI());
+
+    return Files.readString(resource, UTF_8);
+  }
+
+  private void write(URI target, String content) throws IOException {
+    Files.writeString(
+      Path.of(target),
+      content,
+      UTF_8,
+      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.DSYNC
+    );
+  }
+
+  private String content(String path, Object... args) throws IOException, URISyntaxException {
+    String template = read(path);
+
+    return format(template, args);
   }
 }
