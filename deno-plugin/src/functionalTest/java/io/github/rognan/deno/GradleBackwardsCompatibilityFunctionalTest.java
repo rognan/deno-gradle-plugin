@@ -16,14 +16,6 @@
 
 package io.github.rognan.deno;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-
 import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.GradleRunner;
 import org.gradle.testkit.runner.TaskOutcome;
@@ -32,23 +24,56 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GradleBackwardsCompatibilityFunctionalTest {
+class GradleBackwardsCompatibilityFunctionalTest {
+  private static final String denoVersion = "1.38.4";
+  private static final String settingsFileTemplate = """
+      buildCache {
+        // Having the local cache in a temporary directory will ensure a clean build cache between
+        // tests. The default local cache dir (A Gradle user home created by the Gradle Test Kit)
+        // is re-used between tests.
+
+        local {
+          directory = file("%s")
+        }
+      }
+    """;
+
+  private static final String buildFileTemplate = """
+    plugins {
+      id("io.github.rognan.deno") version("0.1.0")
+    }
+
+    deno {
+      version.set("%s")
+    }
+
+    tasks.register<io.github.rognan.deno.task.DenoExecTask>("denoExec") {
+      args.set(listOf("--version"))
+    }
+    """;
+
   @TempDir
   File projectDir;
-  String denoVersion = "1.38.4";
 
   @BeforeEach
-  void setUp() throws IOException, URISyntaxException {
+  void setUp() throws IOException {
     URI settingsFile = new File(projectDir, "settings.gradle.kts").toURI();
     URI buildFile = new File(projectDir, "build.gradle.kts").toURI();
     URI cacheDir = new File(projectDir, ".cache").toURI();
 
-    write(settingsFile, content("templates/settings.gradle.kts", cacheDir));
-    write(buildFile, content("templates/build.gradle.kts", denoVersion));
+    write(settingsFile, format(settingsFileTemplate, cacheDir));
+    write(buildFile, format(buildFileTemplate, denoVersion));
   }
 
   @ParameterizedTest
@@ -71,25 +96,12 @@ public class GradleBackwardsCompatibilityFunctionalTest {
     assertThat(buildResult.getOutput()).contains("deno " + denoVersion);
   }
 
-  private String read(String template) throws IOException, URISyntaxException {
-    ClassLoader classLoader = getClass().getClassLoader();
-    Path resource = Path.of(classLoader.getResource(template).toURI());
-
-    return Files.readString(resource, UTF_8);
-  }
-
-  private void write(URI target, String content) throws IOException {
+  private static void write(URI target, String content) throws IOException {
     Files.writeString(
       Path.of(target),
       content,
       UTF_8,
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.DSYNC
     );
-  }
-
-  private String content(String path, Object... args) throws IOException, URISyntaxException {
-    String template = read(path);
-
-    return format(template, args);
   }
 }
