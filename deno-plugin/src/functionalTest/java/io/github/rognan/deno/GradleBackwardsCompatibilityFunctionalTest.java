@@ -36,7 +36,7 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DenoPluginFunctionalTest {
+public class GradleBackwardsCompatibilityFunctionalTest {
   @TempDir
   File projectDir;
   String denoVersion = "1.38.4";
