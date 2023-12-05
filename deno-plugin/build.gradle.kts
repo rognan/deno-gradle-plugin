@@ -12,8 +12,6 @@ plugins {
 
 val jvmTestVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)
 val jvmReleaseVersion: JavaLanguageVersion = JavaLanguageVersion.of(8)
-val functionalTestSourceSet: SourceSet = sourceSets.create("functionalTest")
-configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
 dependencyLocking {
   lockAllConfigurations()
@@ -21,13 +19,50 @@ dependencyLocking {
 }
 
 gradlePlugin {
-  testSourceSets(functionalTestSourceSet)
-
   plugins.create("deno") {
     id = "io.github.rognan.deno"
     displayName = "Deno Gradle Plugin"
     description = "Use Deno, a runtime for JavaScript and Typescript, as part of your Gradle build."
     implementationClass = "io.github.rognan.deno.DenoPlugin"
+  }
+}
+
+testing.suites {
+  configureEach {
+    if(this is JvmTestSuite) {
+      useJUnitJupiter("5.10.1")
+      dependencies {
+        implementation("org.assertj:assertj-core:3.24.2")
+      }
+      this.targets.configureEach {
+        testTask {
+          javaLauncher.set(javaToolchains.launcherFor {
+            languageVersion.set(jvmTestVersion)
+          })
+        }
+      }
+    }
+  }
+
+  val test by getting(JvmTestSuite::class)
+
+  register<JvmTestSuite>("functionalTest") {
+    // make plugin-under-test-metadata.properties accessible to TestKit
+    gradlePlugin.testSourceSet(sources)
+    targets.configureEach {
+      testTask {
+        shouldRunAfter(test)
+
+        // required Java installations, in part, for backwards compatibility tests
+        listOf(8, 11, 17, 21).forEach {
+          val javaHome = javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(it))
+          }.get().metadata.installationPath.asFile.absolutePath
+
+          systemProperty("java${it}Home", javaHome)
+        }
+      }
+    }
   }
 }
 
@@ -40,10 +75,6 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  javaCompiler.set(javaToolchains.compilerFor {
-    languageVersion.set(jvmReleaseVersion)
-  })
-
   options.encoding = "UTF-8"
   options.isIncremental = true
   options.compilerArgs = listOf("-Xlint:all", "-Werror")
@@ -62,22 +93,8 @@ tasks.named<JavaCompile>("compileFunctionalTestJava") {
   })
 }
 
-tasks.withType<Test>().configureEach {
-  useJUnitPlatform()
-  javaLauncher.set(javaToolchains.launcherFor {
-    languageVersion.set(jvmTestVersion)
-  })
-}
-
-val functionalTest by tasks.registering(Test::class) {
-  group = "Verification"
-
-  testClassesDirs = functionalTestSourceSet.output.classesDirs
-  classpath = functionalTestSourceSet.runtimeClasspath
-}
-
 tasks.check {
-  dependsOn(functionalTest)
+  dependsOn(testing.suites.named("functionalTest"))
 }
 
 tasks.withType<AbstractArchiveTask>().configureEach {
@@ -104,18 +121,9 @@ tasks.named<Jar>("jar") {
   }
 }
 
-dependencies {
-  testImplementation("org.assertj:assertj-core:3.24.2")
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
-  testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.1")
-  "functionalTestRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.10.1")
-  "functionalTestRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.10.1")
-}
-
 repositories {
   mavenCentral()
 }
 
 fun env(variable: String) = System.getenv(variable)
+
