@@ -52,6 +52,15 @@ testing.suites {
     targets.configureEach {
       testTask {
         shouldRunAfter(test)
+
+        // required Java installations, in part, for backwards compatibility tests
+        listOf(8, 11, 17, 21).forEach {
+          val javaHome = javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(it))
+          }.get().metadata.installationPath.asFile.absolutePath
+
+          systemProperty("java${it}Home", javaHome)
+        }
       }
     }
   }
@@ -117,3 +126,4 @@ repositories {
 }
 
 fun env(variable: String) = System.getenv(variable)
+

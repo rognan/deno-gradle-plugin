@@ -22,7 +22,8 @@ import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -37,11 +39,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GradleBackwardsCompatibilityFunctionalTest {
   private static final String denoVersion = "1.38.4";
+  private static final String propertiesFileTemplate = """
+    org.gradle.java.home=%s
+    """;
+
   private static final String settingsFileTemplate = """
       buildCache {
-        // Having the local cache in a temporary directory will ensure a clean build cache between
-        // tests. The default local cache dir (A Gradle user home created by the Gradle Test Kit)
-        // is re-used between tests.
+        // Having local cache in a temp dir will ensure a clean build cache between tests.
+        // The default local cache dir (A Gradle user home created by the Gradle Test Kit) is
+        // re-used between tests.
 
         local {
           directory = file("%s")
@@ -77,14 +83,20 @@ class GradleBackwardsCompatibilityFunctionalTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"7.6.3", "8.5"})
-  void i_can_execute_the_plugin_with_specified_gradle_version(String gradleVersion) {
+  @MethodSource("compatibilityMatrixProvider")
+  void i_can_execute_the_plugin_with_specified_gradle_and_java(String gradleVersion, String javaHome) throws IOException {
+    URI propertiesFile = new File(projectDir, "gradle.properties").toURI();
+    write(propertiesFile, format(propertiesFileTemplate, windowsFriendlyPath(javaHome)));
+
     var buildResult = GradleRunner.create()
       .withGradleVersion(gradleVersion)
       .withPluginClasspath()
       .withProjectDir(projectDir)
       .withArguments(":denoExec")
-      .forwardOutput()
+      // Causes TestKit to run without a daemon that otherwise may complain about a mismatch between
+      // the specified Java Home and the Java Home that the daemon resolved, which may occur when
+      // symlinks are present as they are for some JDKs (Which occurred with Gradle 6.7 and JDK8).
+      .withDebug(true)
       .build();
 
     BuildTask installTask = buildResult.task(":denoInstall");
@@ -96,12 +108,36 @@ class GradleBackwardsCompatibilityFunctionalTest {
     assertThat(buildResult.getOutput()).contains("deno " + denoVersion);
   }
 
-  private static void write(URI target, String content) throws IOException {
+  static void write(URI target, String content) throws IOException {
     Files.writeString(
       Path.of(target),
       content,
       UTF_8,
       StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.DSYNC
     );
+  }
+
+  /* Support last 3 major versions of Gradle + supported java LTS versions */
+
+  static Stream<Arguments> compatibilityMatrixProvider() {
+    String java8Home = System.getProperty("java8Home");
+    String java11Home = System.getProperty("java11Home");
+    String java17Home = System.getProperty("java17Home");
+    String java21Home = System.getProperty("java21Home");
+
+    Stream<Arguments> gradle6 = Stream.of(java8Home, java11Home)
+      .map(it -> Arguments.of("6.7.1", it));
+
+    Stream<Arguments> gradle7 = Stream.of(java8Home, java11Home, java17Home)
+      .map(it -> Arguments.of("7.6.3", it));
+
+    Stream<Arguments> gradle8 = Stream.of(java8Home, java11Home, java17Home, java21Home)
+      .map(it -> Arguments.of("8.5", it));
+
+    return Stream.of(gradle6, gradle7, gradle8).flatMap(it -> it);
+  }
+
+  private String windowsFriendlyPath(String javaHome) {
+    return javaHome.replace("\\", "\\\\");
   }
 }

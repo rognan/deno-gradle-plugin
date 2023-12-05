@@ -19,13 +19,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Configure JDK ${{ matrix.gradle-jdk }} and ${{ matrix.release-target-jdk }} (${{ matrix.arch }})
+      - name: Configure JDKs
         uses: actions/setup-java@v4.0.0
         with:
           architecture: ${{ matrix.arch }}
           distribution: 'temurin'
           java-version: |
             ${{ matrix.release-target-jdk }}
+            11
+            17
             ${{ matrix.gradle-jdk }}
       - name: Build project
         uses: gradle/gradle-build-action@v2.10.0
