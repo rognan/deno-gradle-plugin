@@ -29,17 +29,18 @@ jobs:
             11
             17
             ${{ matrix.gradle-jdk }}
-      - name: Build project
-        uses: gradle/gradle-build-action@v2.12.0
+      - name: Configure Gradle
+        uses: gradle/actions/setup-gradle@v3.0.0
         with:
           # Only write to the cache on the 'main' branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
           gradle-version: ${{ matrix.gradle-version }}
-          arguments: >
-            build --info --console plain
-            -Dorg.gradle.java.installations.auto-detect=true
-            -Dorg.gradle.java.installations.auto-download=false
-      - name: Upload build reports
+      - name: Execute build
+        run: >
+          gradle build --info --console plain
+          -D org.gradle.java.installations.auto-detect=true
+          -D org.gradle.java.installations.auto-download=false
+      - name: Upload reports
         uses: actions/upload-artifact@v4
         if: env.ACT != 'true' && always()
         with:
