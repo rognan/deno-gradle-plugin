@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: 'macos-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.5' }
-          - { os: 'ubuntu-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.5' }
-          - { os: 'windows-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.5' }
+          - { os: 'macos-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.6' }
+          - { os: 'ubuntu-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.6' }
+          - { os: 'windows-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.6' }
     name: >
       Gradle ${{ matrix.gradle-version }} w/JDK ${{ matrix.gradle-jdk }} on
       ${{ matrix.os }} (${{ matrix.arch }}) using toolchain JDK ${{ matrix.release-target-jdk}}
