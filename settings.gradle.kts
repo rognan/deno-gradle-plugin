@@ -31,21 +31,6 @@ gradleEnterprise {
       value("Job", env("GITHUB_JOB"))
     }
 
-    buildScanPublished {
-      val shortcut = file("${rootDir}/build/reports/gradle-enterprise/build-scan.html")
-      shortcut.parentFile.mkdirs()
-      shortcut.writeText("""
-        <!DOCTYPE HTML>
-        <html>
-         <head>
-          <title>Build Scan</title>
-          <meta http-equiv="refresh" content="0; url='$buildScanUri'">
-         </head>
-         <body>Redirecting you to $buildScanUri.</body>
-        </html>
-        """.trimIndent())
-    }
-
     obfuscation {
       username { "[hidden]" }
       hostname { "[hidden]" }
