@@ -9,10 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        include:
-          - { os: 'macos-latest' }
-          - { os: 'ubuntu-latest' }
-          - { os: 'windows-latest' }
+        os: ['macos-latest', 'ubuntu-latest', 'windows-latest']
     name: >
       Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
