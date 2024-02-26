@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: env.ACT != 'true' && always()
         with:
-          name: build-reports-${{ matrix.os }}-${{ matrix.arch }}-gradle-jdk-${{ matrix.gradle-jdk }}-release-target-jdk-${{ matrix.release-target-jdk }}
+          name: ${{ matrix.os }}-build-reports-archive
           path: |
             build/reports
             ./**/build/reports
