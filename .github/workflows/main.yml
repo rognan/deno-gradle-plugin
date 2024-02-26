@@ -10,30 +10,30 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: 'macos-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.6' }
-          - { os: 'ubuntu-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.6' }
-          - { os: 'windows-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.6' }
+          - { os: 'macos-latest' }
+          - { os: 'ubuntu-latest' }
+          - { os: 'windows-latest' }
     name: >
-      Build on ${{ matrix.os }} w/Gradle ${{ matrix.gradle-version }}
+      Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure JDKs
         uses: actions/setup-java@v4.0.0
         with:
-          architecture: ${{ matrix.arch }}
+          architecture: 'x64'
           distribution: 'temurin'
           java-version: |
-            ${{ matrix.release-target-jdk }}
+            8
             11
             17
-            ${{ matrix.gradle-jdk }}
+            21
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v3.1.0
         with:
           # Only write to the cache on the 'main' branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
-          gradle-version: ${{ matrix.gradle-version }}
+          gradle-version: '8.6'
       - name: Execute build
         run: >
           gradle build --info --console plain
