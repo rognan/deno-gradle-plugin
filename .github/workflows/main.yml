@@ -9,42 +9,38 @@ jobs:
   build:
     strategy:
       matrix:
-        include:
-          - { os: 'macos-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.5' }
-          - { os: 'ubuntu-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.5' }
-          - { os: 'windows-latest', arch: 'x64', release-target-jdk: '8', gradle-jdk: '21', gradle-version: '8.5' }
+        os: ['macos-latest', 'ubuntu-latest', 'windows-latest']
     name: >
-      Gradle ${{ matrix.gradle-version }} w/JDK ${{ matrix.gradle-jdk }} on
-      ${{ matrix.os }} (${{ matrix.arch }}) using toolchain JDK ${{ matrix.release-target-jdk}}
+      Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure JDKs
         uses: actions/setup-java@v4.0.0
         with:
-          architecture: ${{ matrix.arch }}
+          architecture: 'x64'
           distribution: 'temurin'
           java-version: |
-            ${{ matrix.release-target-jdk }}
+            8
             11
             17
-            ${{ matrix.gradle-jdk }}
+            21
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v3.1.0
         with:
           # Only write to the cache on the 'main' branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
-          gradle-version: ${{ matrix.gradle-version }}
+          gradle-version: '8.6'
       - name: Execute build
         run: >
-          gradle build --info --console plain
+          gradle build --info --console plain --scan
           -D org.gradle.java.installations.auto-detect=true
           -D org.gradle.java.installations.auto-download=false
       - name: Upload reports
         uses: actions/upload-artifact@v4
         if: env.ACT != 'true' && always()
         with:
-          name: build-reports-${{ matrix.os }}-${{ matrix.arch }}-gradle-jdk-${{ matrix.gradle-jdk }}-release-target-jdk-${{ matrix.release-target-jdk }}
+          name: ${{ matrix.os }}-build-reports-archive
           path: |
             build/reports
             ./**/build/reports
