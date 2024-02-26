@@ -14,7 +14,6 @@ gradleEnterprise {
 
     val isCiServer = !env("CI").isNullOrEmpty()
     val isAct = env("ACT").toBoolean()
-    publishAlwaysIf(isCiServer && !isAct)
 
     when {
       isAct -> tag("ACT")

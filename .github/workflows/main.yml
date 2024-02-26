@@ -33,7 +33,7 @@ jobs:
           gradle-version: '8.6'
       - name: Execute build
         run: >
-          gradle build --info --console plain
+          gradle build --info --console plain --scan
           -D org.gradle.java.installations.auto-detect=true
           -D org.gradle.java.installations.auto-download=false
       - name: Upload reports
