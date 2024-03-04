@@ -28,12 +28,10 @@ jobs:
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v3.1.0
         with:
-          # Only write to the cache on the 'main' branch
-          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
-          gradle-version: '8.6'
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
       - name: Execute build
         run: >
-          gradle build --info --console plain --scan
+          ./gradlew build --info --console plain --scan
           -D org.gradle.java.installations.auto-detect=true
           -D org.gradle.java.installations.auto-download=false
       - name: Upload reports
