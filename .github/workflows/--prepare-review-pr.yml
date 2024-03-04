@@ -1,0 +1,15 @@
+name: Prepare Review PR
+on: [ pull_request ]
+permissions:
+  contents: read
+jobs:
+  store-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Store dependency graph
+        uses: gradle/actions/dependency-submission@v3
+        with:
+          dependency-graph: generate-and-upload
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+

@@ -1,4 +1,4 @@
-name: "Build"
+name: Main Workflow
 on:
   push:
     branches:
@@ -9,17 +9,16 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ['macos-latest', 'ubuntu-latest', 'windows-latest']
-    name: >
-      Build on ${{ matrix.os }}
+        os: ["macos-latest", "ubuntu-latest", "windows-latest"]
+    name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure JDKs
         uses: actions/setup-java@v4.1.0
         with:
-          architecture: 'x64'
-          distribution: 'temurin'
+          architecture: "x64"
+          distribution: "temurin"
           java-version: |
             8
             11

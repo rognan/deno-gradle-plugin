@@ -1,6 +1,35 @@
-name: "Sanity check pull request"
-on: [ pull_request ]
+name: Review PR
+on:
+  workflow_run:
+    workflows: ["Prepare Review PR"]
+    types:
+      - completed
 jobs:
+  submit-dependencies:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Submit dependency graph
+        uses: gradle/actions/dependency-submission@v3
+        with:
+          dependency-graph: download-and-submit
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+  review-dependencies:
+    needs: submit-dependencies
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Review dependencies
+        uses: actions/dependency-review-action@v4
+        with:
+          retry-on-snapshot-warnings: true
+          retry-on-snapshot-warnings-timeout: 600
+          allow-dependencies-licenses: "pkg:maven/org.openjdk.nashorn/nashorn-core@15.4?type=jar"
+          allow-licenses: Apache-2.0, MIT, EPL-2.0, BSD-3-Clause, 0BSD
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
     steps:
