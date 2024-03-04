@@ -31,6 +31,7 @@ jobs:
           # Only write to the cache on the 'main' branch
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
           gradle-version: '8.6'
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
       - name: Execute build
         run: >
           gradle build --info --console plain --scan
