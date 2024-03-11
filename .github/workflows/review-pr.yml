@@ -1,4 +1,4 @@
-name: "Sanity check pull request"
+name: "Review PR"
 on: [ pull_request ]
 jobs:
   validate-gradle-wrapper:
