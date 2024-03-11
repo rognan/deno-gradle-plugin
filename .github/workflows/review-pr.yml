@@ -15,6 +15,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: git log --check
+        env:
+          fork_point: ${{ github.event.pull_request.base.sha }}
         run: |
           commit=
           errors=
@@ -37,7 +39,7 @@ jobs:
               echo "${prefix} ${remainder}"
               ;;
             esac
-          done <<< $(git log --check --pretty=format:"--- %h %s" ${{github.event.pull_request.base.sha}}..)
+          done <<< $(git log --check --pretty=format:"--- %h %s" ${fork_point}..)
 
           if test -n "${errors}"
           then
