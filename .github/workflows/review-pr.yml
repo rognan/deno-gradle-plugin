@@ -1,5 +1,7 @@
 name: "Review PR"
 on: [ pull_request ]
+permissions:
+  contents: read
 jobs:
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
