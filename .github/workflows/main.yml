@@ -43,3 +43,14 @@ jobs:
           path: |
             build/reports
             ./**/build/reports
+  upload-dependency-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gradle/actions/dependency-submission@v3
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-service-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-service-agree: "yes"
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          dependency-graph: generate-and-upload
