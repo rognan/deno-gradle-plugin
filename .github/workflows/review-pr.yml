@@ -8,6 +8,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: gradle/wrapper-validation-action@v2.1.1
+  review-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          retry-on-snapshot-warnings: true
+          retry-on-snapshot-warnings-timeout: 600
+          allow-dependencies-licenses: "pkg:maven/org.openjdk.nashorn/nashorn-core@15.4?type=jar"
+          allow-licenses: Apache-2.0, MIT, EPL-2.0, BSD-3-Clause, 0BSD
   verify-no-whitespace-errors:
     runs-on: ubuntu-latest
     steps:
