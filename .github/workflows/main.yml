@@ -15,7 +15,7 @@ jobs:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.1
       - name: Configure JDKs
         uses: actions/setup-java@v4.1.0
         with:
@@ -36,7 +36,7 @@ jobs:
           -D org.gradle.java.installations.auto-detect=true
           -D org.gradle.java.installations.auto-download=false
       - name: Upload reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.1
         if: env.ACT != 'true' && always()
         with:
           name: ${{ matrix.os }}-build-reports-archive
@@ -46,8 +46,8 @@ jobs:
   upload-dependency-graph:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: gradle/actions/dependency-submission@v3
+      - uses: actions/checkout@v4.1.1
+      - uses: gradle/actions/dependency-submission@v3.1.0
         with:
           build-scan-publish: true
           build-scan-terms-of-service-url: "https://gradle.com/terms-of-service"
