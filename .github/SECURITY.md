@@ -2,8 +2,6 @@
 
 ## Reporting a Vulnerability
 
-Please send a mail to [thor.rognan@gmail.com](mailto:thor.rognan@gmail.com?subject=[GitHub]%20security%20vulnerability) to report a vulnerability.
-
 Example details to include:
 
 - A short description detailing the exploit.
