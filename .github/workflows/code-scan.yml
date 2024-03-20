@@ -19,7 +19,7 @@ jobs:
       matrix:
         languages: [ "java-kotlin" ]
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
       - uses: github/codeql-action/init@v3.24.8
         with:
           languages: ${{ matrix.languages }}
