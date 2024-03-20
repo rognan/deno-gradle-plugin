@@ -1,0 +1,17 @@
+name: "Submit Dependency Graph"
+on:
+  workflow_run:
+    workflows: ["Main Workflow"]
+    types:
+      - completed
+jobs:
+  submit-dependency-graph:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: gradle/actions/dependency-submission@v3.1.0
+        with:
+          cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          dependency-graph: download-and-submit
