@@ -33,6 +33,7 @@ testing.suites {
       useJUnitJupiter("5.10.2")
       dependencies {
         implementation("org.assertj:assertj-core:3.25.3")
+        implementation("com.google.guava:guava:26.0-jre")
       }
       this.targets.configureEach {
         testTask {
