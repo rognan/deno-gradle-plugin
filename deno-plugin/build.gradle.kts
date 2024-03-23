@@ -30,9 +30,9 @@ gradlePlugin {
 testing.suites {
   configureEach {
     if(this is JvmTestSuite) {
-      useJUnitJupiter("5.10.1")
+      useJUnitJupiter("5.10.2")
       dependencies {
-        implementation("org.assertj:assertj-core:3.24.2")
+        implementation("org.assertj:assertj-core:3.25.3")
       }
       this.targets.configureEach {
         testTask {
