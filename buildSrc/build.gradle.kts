@@ -76,5 +76,4 @@ dependencies {
   implementation("gradle.plugin.org.jetbrains.gradle.plugin.idea-ext:gradle-idea-ext:1.1.7")
   implementation("com.diffplug.spotless-changelog:spotless-changelog-plugin-gradle:3.0.2")
   implementation("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
-  runtimeOnly("org.openjdk.nashorn:nashorn-core:15.4")
 }
