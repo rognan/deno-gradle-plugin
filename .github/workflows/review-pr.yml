@@ -1,5 +1,8 @@
 name: "Review PR"
 on: [ pull_request ]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: ${{ !contains(github.ref, 'release/') }}
 permissions:
   contents: read
 jobs:
