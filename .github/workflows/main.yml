@@ -5,6 +5,9 @@ on:
       - main
   pull_request:
     types: [opened, reopened, synchronize]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: ${{ !contains(github.ref, 'release/') }}
 permissions:
   contents: read
 jobs:
