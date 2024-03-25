@@ -10,7 +10,7 @@ plugins {
   id("build.conventions")
 }
 
-val jvmTestVersion: JavaLanguageVersion = JavaLanguageVersion.of(17)
+val jvmTestVersion: JavaLanguageVersion = JavaLanguageVersion.of(21)
 val jvmReleaseVersion: JavaLanguageVersion = JavaLanguageVersion.of(8)
 
 dependencyLocking {
