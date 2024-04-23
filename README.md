@@ -32,7 +32,7 @@ deno {
 }
 
 // arguments are forwarded directly to deno
-tasks.register<task.io.github.rognan.deno.DenoExecTask>("helloWorld") {
+tasks.register<task.io.github.rognan.deno.ExecTask>("helloWorld") {
   args.set(listOf("eval", "console.log('Hello, World!');"))
 }
 ```

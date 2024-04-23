@@ -16,7 +16,7 @@
 
 package io.github.rognan.deno;
 
-import io.github.rognan.deno.task.DenoExecTask;
+import io.github.rognan.deno.task.ExecTask;
 import io.github.rognan.deno.task.InstallTask;
 import io.github.rognan.deno.util.PlatformHelper;
 import org.gradle.api.Plugin;
@@ -46,7 +46,7 @@ import java.net.URI;
  *     version.set("1.19.1")
  *   }
  *
- *   tasks.register&#60;io.github.rognan.deno.task.DenoExecTask&#62;("helloWorld") {
+ *   tasks.register&#60;io.github.rognan.deno.task.ExecTask&#62;("helloWorld") {
  *     args.set(listOf("eval", "console.log('Hello, World!');"))
  *   }
  * </pre>
@@ -118,7 +118,7 @@ public class DenoPlugin implements Plugin<Project> {
         it.getDestinationDir().set(installDirProvider);
       });
 
-    project.getTasks().withType(DenoExecTask.class).configureEach((it) -> {
+    project.getTasks().withType(ExecTask.class).configureEach((it) -> {
       it.dependsOn(installTaskProvider);
       it.getDeno().set(denoProvider);
     });

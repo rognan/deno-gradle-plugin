@@ -64,7 +64,7 @@ class GradleBackwardsCompatibilityFunctionalTest {
       version.set("%s")
     }
 
-    tasks.register<io.github.rognan.deno.task.DenoExecTask>("denoExec") {
+    tasks.register<io.github.rognan.deno.task.ExecTask>("denoExec") {
       args.set(listOf("--version"))
     }
     """;
