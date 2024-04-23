@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 /**
  * Execute deno with provided arguments.
  */
-public class DenoExecTask extends DefaultTask {
+public class ExecTask extends DefaultTask {
   @InputFile
   @PathSensitive(PathSensitivity.RELATIVE)
   RegularFileProperty deno = getProject().getObjects().fileProperty();
