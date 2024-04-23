@@ -9,7 +9,7 @@ jobs:
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.2
+      - uses: actions/checkout@v4.1.3
       - uses: gradle/wrapper-validation-action@v2.1.3
   review-dependencies:
     permissions:
@@ -17,7 +17,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.2
+      - uses: actions/checkout@v4.1.3
       - uses: actions/dependency-review-action@v4.2.5
         with:
           comment-summary-in-pr: always
@@ -28,7 +28,7 @@ jobs:
   verify-no-whitespace-errors:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.2
+      - uses: actions/checkout@v4.1.3
         with:
           fetch-depth: 0
       - name: git log --check
