@@ -18,7 +18,7 @@ jobs:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4.1.3
+      - uses: actions/checkout@v4.1.4
       - name: Configure JDKs
         uses: actions/setup-java@v4.2.1
         with:
@@ -50,7 +50,7 @@ jobs:
   upload-dependency-graph:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.3
+      - uses: actions/checkout@v4.1.4
       - uses: gradle/actions/dependency-submission@v3.3.2
         with:
           build-scan-publish: true
