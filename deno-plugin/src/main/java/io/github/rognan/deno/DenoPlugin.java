@@ -23,7 +23,6 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.ConfigurationContainer;
-import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.artifacts.repositories.IvyArtifactRepository;
 import org.gradle.api.file.Directory;
 import org.gradle.api.file.RegularFile;
@@ -58,23 +57,21 @@ public class DenoPlugin implements Plugin<Project> {
     DenoExtension extension = DenoExtension.create(project);
     ConfigurationContainer configurations = project.getConfigurations();
 
-    Configuration denoConfiguration = configurations.create("deno", (configuration) -> {
-      configuration.setDescription("Configuration for 'io.github.rognan.deno'");
-      configuration.setCanBeConsumed(false);
-      configuration.setCanBeResolved(true);
-      configuration.setTransitive(false);
-      configuration.setVisible(false);
+    Configuration configuration = configurations.create("deno", it -> {
+      it.setDescription("Configuration for 'io.github.rognan.deno'");
+      it.setCanBeConsumed(false);
+      it.setCanBeResolved(true);
+      it.setTransitive(false);
+      it.setVisible(false);
 
-      configuration.defaultDependencies((dependencySet) -> dependencySet.add(
+      it.defaultDependencies((dependencySet) -> dependencySet.add(
         project.getDependencies().create(
           extension.getVersion().map(helper::getDependencyNotation).get()
         ))
       );
     });
 
-    final RepositoryHandler repositories = project.getRepositories();
-
-    repositories.ivy((repository) -> {
+    project.getRepositories().ivy((repository) -> {
       repository.setName("io.github.rognan.deno:denoland@github");
       repository.setUrl(URI.create("https://github.com/"));
 
@@ -89,11 +86,11 @@ public class DenoPlugin implements Plugin<Project> {
         descriptor.includeGroup("denoland");
 
         // Only handle 'deno' configuration
-        descriptor.onlyForConfigurations(denoConfiguration.getName());
+        descriptor.onlyForConfigurations(configuration.getName());
       });
     });
 
-    Provider<File> denoArchiveProvider = denoConfiguration
+    Provider<File> archiveProvider = configuration
       .getElements()
       .map((it) -> it.stream().findFirst().get().getAsFile());
 
@@ -114,7 +111,7 @@ public class DenoPlugin implements Plugin<Project> {
 
     TaskProvider<InstallTask> installTaskProvider = project.getTasks()
       .register(InstallTask.NAME, InstallTask.class, (it) -> {
-        it.getArchive().set(project.getLayout().file(denoArchiveProvider));
+        it.getArchive().set(project.getLayout().file(archiveProvider));
         it.getDestinationDir().set(installDirProvider);
       });
 
