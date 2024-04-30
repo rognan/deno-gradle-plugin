@@ -17,21 +17,25 @@
 package io.github.rognan.deno.task;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.file.ArchiveOperations;
 import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.FileSystemOperations;
 import org.gradle.api.file.RegularFileProperty;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.WorkResult;
+import org.gradle.work.DisableCachingByDefault;
+
+import javax.inject.Inject;
 
 /**
- * Unpacks given {@code archive} into {@code destinationDir}.
+ * Unpack given {@code archive} into {@code destinationDir}.
  */
-// Making this task cacheable probably serves no purpose, the dependency itself is already cached so
-// there's no network overhead to speak of, and unzipping the file is about as expensive as
-// restoring it from a cache.
+@DisableCachingByDefault(because = "the dependency is already cached and decompressing the archive is about as expensive as restoring from cache")
 public class InstallTask extends DefaultTask {
 
   /**
@@ -43,28 +47,38 @@ public class InstallTask extends DefaultTask {
    * The task name
    */
   public static final String NAME = "denoInstall";
-  {
-    setGroup(DEFAULT_GROUP);
-    setDescription("Installs a local version of deno.");
-  }
+  private final ArchiveOperations archiveOperations;
+  private final FileSystemOperations fileSystemOperations;
 
   /**
    * The zip archive to unpack into {@code destinationDir}.
    */
   @PathSensitive(PathSensitivity.ABSOLUTE)
   @InputFile
-  RegularFileProperty archive = getProject().getObjects().fileProperty();
+  private final RegularFileProperty archive;
 
   /**
    * The directory to unpack {@code archive} into.
    */
   @OutputDirectory
-  DirectoryProperty destinationDir = getProject().getObjects().directoryProperty();
+  private final DirectoryProperty destinationDir;
+
+  @Inject
+  public InstallTask(ObjectFactory objectFactory, ArchiveOperations archiveOperations, FileSystemOperations fileSystemOperations) {
+    setGroup(DEFAULT_GROUP);
+    setDescription("Install a project local version of deno.");
+
+    this.archiveOperations = archiveOperations;
+    this.fileSystemOperations = fileSystemOperations;
+
+    this.archive = objectFactory.fileProperty();
+    this.destinationDir = objectFactory.directoryProperty();
+  }
 
   @TaskAction
-  WorkResult install() {
-    return getProject().copy((it) -> {
-      it.from(getProject().zipTree(archive.getAsFile()));
+  public WorkResult install() {
+    return fileSystemOperations.copy(it -> {
+      it.from(archiveOperations.zipTree(archive.getAsFile()));
       it.into(destinationDir);
     });
   }
