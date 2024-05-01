@@ -92,7 +92,11 @@ public class DenoPlugin implements Plugin<Project> {
 
     Provider<File> archiveProvider = configuration
       .getElements()
-      .map((it) -> it.stream().findFirst().get().getAsFile());
+      .map(it -> it.stream()
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Could not find deno dependency. Did you add it?"))
+        .getAsFile()
+      );
 
     Provider<Directory> installDirProvider = project.provider(() -> {
       return extension.getVersion().map((theVersion) -> {
