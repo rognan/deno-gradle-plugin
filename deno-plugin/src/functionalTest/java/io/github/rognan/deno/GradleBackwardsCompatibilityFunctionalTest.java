@@ -39,7 +39,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS;
 
 class GradleBackwardsCompatibilityFunctionalTest {
-  private static final String denoVersion = "1.38.4";
   private static final String propertiesFileTemplate = """
     org.gradle.java.home=%s
     """;
@@ -61,10 +60,6 @@ class GradleBackwardsCompatibilityFunctionalTest {
       id("io.github.rognan.deno") version("0.1.0")
     }
 
-    deno {
-      version.set("%s")
-    }
-
     tasks.register<io.github.rognan.deno.task.ExecTask>("denoExec") {
       args.set(listOf("--version"))
     }
@@ -80,7 +75,7 @@ class GradleBackwardsCompatibilityFunctionalTest {
     URI cacheDir = new File(projectDir, ".cache").toURI();
 
     write(settingsFile, format(settingsFileTemplate, cacheDir));
-    write(buildFile, format(buildFileTemplate, denoVersion));
+    write(buildFile, buildFileTemplate);
   }
 
   @Test
@@ -105,7 +100,7 @@ class GradleBackwardsCompatibilityFunctionalTest {
     assertThat(installTask.getOutcome()).isEqualTo(SUCCESS);
     assertThat(execTask.getOutcome()).isEqualTo(SUCCESS);
 
-    assertThat(buildResult.getOutput()).contains("deno " + denoVersion);
+    assertThat(buildResult.getOutput()).contains("deno 1.43.4");
   }
 
   @ParameterizedTest
@@ -131,7 +126,7 @@ class GradleBackwardsCompatibilityFunctionalTest {
     assertThat(installTask.getOutcome()).isEqualTo(SUCCESS);
     assertThat(execTask.getOutcome()).isEqualTo(SUCCESS);
 
-    assertThat(buildResult.getOutput()).contains("deno " + denoVersion);
+    assertThat(buildResult.getOutput()).contains("deno 1.43.4");
   }
 
   static void write(URI target, String content) throws IOException {
