@@ -143,16 +143,12 @@ class GradleBackwardsCompatibilityFunctionalTest {
     );
   }
 
-  /* Support last 3 major versions of Gradle + supported java LTS versions */
-
+  /* Support java LTS versions and the last 2 major versions of Gradle */
   static Stream<Arguments> compatibilityMatrixProvider() {
     String java8Home = System.getProperty("java8Home");
     String java11Home = System.getProperty("java11Home");
     String java17Home = System.getProperty("java17Home");
     String java21Home = System.getProperty("java21Home");
-
-    Stream<Arguments> gradle6 = Stream.of(java8Home, java11Home)
-      .map(it -> Arguments.of("6.7.1", it));
 
     Stream<Arguments> gradle7 = Stream.of(java8Home, java11Home, java17Home)
       .map(it -> Arguments.of("7.6.3", it));
@@ -160,7 +156,7 @@ class GradleBackwardsCompatibilityFunctionalTest {
     Stream<Arguments> gradle8 = Stream.of(java8Home, java11Home, java17Home, java21Home)
       .map(it -> Arguments.of("8.5", it));
 
-    return Stream.of(gradle6, gradle7, gradle8).flatMap(it -> it);
+    return Stream.of(gradle7, gradle8).flatMap(it -> it);
   }
 
   private String windowsFriendlyPath(String javaHome) {
