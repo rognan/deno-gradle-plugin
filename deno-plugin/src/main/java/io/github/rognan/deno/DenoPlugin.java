@@ -64,24 +64,24 @@ public class DenoPlugin implements Plugin<Project> {
       it.setTransitive(false);
       it.setVisible(false);
 
-      it.defaultDependencies((dependencySet) -> dependencySet.add(
+      it.defaultDependencies(dependencySet -> dependencySet.add(
         project.getDependencies().create(
           extension.getVersion().map(helper::getDependencyNotation).get()
         ))
       );
     });
 
-    project.getRepositories().ivy((repository) -> {
+    project.getRepositories().ivy(repository -> {
       repository.setName("io.github.rognan.deno:denoland@github");
       repository.setUrl(URI.create("https://github.com/"));
 
-      repository.patternLayout((layout) -> layout.artifact(
+      repository.patternLayout(layout -> layout.artifact(
         "[organization]/[module]/releases/download/v[revision]/[module]-[classifier].[ext]"
       ));
 
       repository.metadataSources(IvyArtifactRepository.MetadataSources::artifact);
 
-      repository.content((descriptor) -> {
+      repository.content(descriptor -> {
         // Only handle 'denoland:*:*' dependencies
         descriptor.includeGroup("denoland");
 
@@ -99,7 +99,7 @@ public class DenoPlugin implements Plugin<Project> {
       );
 
     Provider<Directory> installDirProvider = project.provider(() -> {
-      return extension.getVersion().map((theVersion) -> {
+      return extension.getVersion().map(theVersion -> {
         return project.getRootProject()
           .getLayout()
           .getProjectDirectory()
@@ -114,12 +114,12 @@ public class DenoPlugin implements Plugin<Project> {
     });
 
     TaskProvider<InstallTask> installTaskProvider = project.getTasks()
-      .register(InstallTask.NAME, InstallTask.class, (it) -> {
+      .register(InstallTask.NAME, InstallTask.class, it -> {
         it.getArchive().set(project.getLayout().file(archiveProvider));
         it.getDestinationDir().set(installDirProvider);
       });
 
-    project.getTasks().withType(ExecTask.class).configureEach((it) -> {
+    project.getTasks().withType(ExecTask.class).configureEach(it -> {
       it.dependsOn(installTaskProvider);
       it.getDeno().set(denoProvider);
     });
