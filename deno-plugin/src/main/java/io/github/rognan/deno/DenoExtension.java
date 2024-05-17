@@ -30,7 +30,7 @@ import org.gradle.api.provider.Property;
  */
 public class DenoExtension {
   private static final String NAME = "deno";
-  private static final String DEFAULT_VERSION = "1.16.3";
+  private static final String DEFAULT_VERSION = "1.43.4";
 
   private final Property<String> version;
 

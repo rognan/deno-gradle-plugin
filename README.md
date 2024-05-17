@@ -18,8 +18,6 @@ output = [
 
 This plugin enables you to use [Deno][0] as part of your [Gradle][1] build.
 
-Example:
-
 ```kotlin
 plugins {
   id("io.github.rognan.deno") version "0.1.0"
@@ -28,7 +26,7 @@ plugins {
 deno {
   // deno is downloaded from https://github.com/denoland/deno/releases
   // and placed in ${rootProject}/.gradle/deno/v${denoVersion}-${arch}-${os}
-  version.set("1.16.3")
+  version.set("1.43.4")
 }
 
 // arguments are forwarded directly to deno
