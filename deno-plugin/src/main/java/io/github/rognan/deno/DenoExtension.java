@@ -32,7 +32,7 @@ public class DenoExtension {
   private static final String NAME = "deno";
   private static final String DEFAULT_VERSION = "1.16.3";
 
-  private Property<String> version;
+  private final Property<String> version;
 
   /**
    * Create new instance of {@code DenoExtension}.
@@ -44,17 +44,11 @@ public class DenoExtension {
   }
 
   /**
-   * @return the deno version
+   * The version of {@code deno} to fetch and use with this plugin.
+   * @return the {@code deno} version
    */
   public Property<String> getVersion() {
     return version;
-  }
-
-  /**
-   * @param version the deno version to use
-   */
-  public void setVersion(Property<String> version) {
-    this.version = version;
   }
 
   static DenoExtension create(Project project) {

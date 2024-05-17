@@ -18,8 +18,8 @@ package io.github.rognan.deno;
 
 import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.GradleRunner;
-import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -30,12 +30,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.gradle.testkit.runner.TaskOutcome.SUCCESS;
 
 class GradleBackwardsCompatibilityFunctionalTest {
   private static final String denoVersion = "1.38.4";
@@ -82,6 +83,31 @@ class GradleBackwardsCompatibilityFunctionalTest {
     write(buildFile, format(buildFileTemplate, denoVersion));
   }
 
+  @Test
+  void it_can_execute_in_projects_where_config_cache_is_enabled() throws IOException {
+    URI propertiesFile = new File(projectDir, "gradle.properties").toURI();
+    write(propertiesFile, format(propertiesFileTemplate, windowsFriendlyPath(System.getProperty("java21Home"))));
+
+    var buildResult = GradleRunner.create()
+      .withGradleVersion("8.7")
+      .withPluginClasspath()
+      .withProjectDir(projectDir)
+      .withArguments(":denoExec", "--configuration-cache")
+      // Causes TestKit to run without a daemon that otherwise may complain about a mismatch between
+      // the specified Java Home and the Java Home that the daemon resolved, which may occur when
+      // symlinks are present as they are for some JDKs (Which occurred with Gradle 6.7 and JDK8).
+      .withDebug(true)
+      .build();
+
+    BuildTask installTask = buildResult.task(":denoInstall");
+    BuildTask execTask = buildResult.task(":denoExec");
+
+    assertThat(installTask.getOutcome()).isEqualTo(SUCCESS);
+    assertThat(execTask.getOutcome()).isEqualTo(SUCCESS);
+
+    assertThat(buildResult.getOutput()).contains("deno " + denoVersion);
+  }
+
   @ParameterizedTest
   @MethodSource("compatibilityMatrixProvider")
   void i_can_execute_the_plugin_with_specified_gradle_and_java(String gradleVersion, String javaHome) throws IOException {
@@ -102,8 +128,8 @@ class GradleBackwardsCompatibilityFunctionalTest {
     BuildTask installTask = buildResult.task(":denoInstall");
     BuildTask execTask = buildResult.task(":denoExec");
 
-    assertThat(installTask.getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
-    assertThat(execTask.getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
+    assertThat(installTask.getOutcome()).isEqualTo(SUCCESS);
+    assertThat(execTask.getOutcome()).isEqualTo(SUCCESS);
 
     assertThat(buildResult.getOutput()).contains("deno " + denoVersion);
   }
@@ -113,7 +139,7 @@ class GradleBackwardsCompatibilityFunctionalTest {
       Path.of(target),
       content,
       UTF_8,
-      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.DSYNC
+      CREATE, WRITE, DSYNC
     );
   }
 
