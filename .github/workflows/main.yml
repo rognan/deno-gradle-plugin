@@ -36,7 +36,7 @@ jobs:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
       - name: Execute build
         run: >
-          ./gradlew build --info --console plain --scan
+          ./gradlew build --info --console plain --scan --no-daemon
           -D org.gradle.java.installations.auto-detect=true
           -D org.gradle.java.installations.auto-download=false
       - name: Upload reports
