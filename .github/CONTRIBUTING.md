@@ -1,179 +1,159 @@
-# Contributing
+# Contributing Guide
 
-This document explains how to:
+Thank you for wanting to contribute! 🥳👌
 
-- contribute to this project
-- configure your development environment
-- work on the code base
-- maximize the chance of your changes to be accepted
-- get help if you encounter trouble
+**Table of Contents**
 
-## Reporting Bugs
+<detail>
+  <summary>Click to expand</summary>
 
-[GitHub issues](https://github.com/rognan/deno-gradle-plugin/issues) is used to track bugs.
+  - [Request Feature](#request-feature)
+  - [Report Vulnerability](#report-vulnerability)
+  - [Report Bug(s)](#report-bugs)
+  - [Make Changes](#make-changes)
+    - [Pre-requisites](#pre-requisites)
+    - [Configure Git](#configure-git)
+    - [Code Guidelines](#code-guidelines)
+    - [Author Commits](#author-commits)
+    - [Submit Changes](#submit-changes)
+  - [Build from Source](#build-from-source)
+  - [Get Help](#get-help)
 
-If you're reporting a bug, please provide as much information about your build as possible.
-A small sample project, or a specific guide on how to reproduce the bug, would be ideal.
+</detail>
 
-## Reporting Security Vulnerabilities
+## Request Feature
 
-If you've found a security vulnerability, please **do not** disclose it publicly.
+You can request a feature through [GitHub Issues][action-request-feature].
 
-Instead, follow the directions in the [security policy](SECURITY.md)
+## Report Vulnerability
 
-## Suggesting Features
+To report security vulnerabilities, follow the directions in the [security policy](SECURITY.md).
 
-[GitHub issues](https://github.com/rognan/deno-gradle-plugin/issues) is used to track new features.
+## Report Bugs
 
-When suggesting a feature, please include a description of the problem you need solved and
-any requirements. If you have a suggestion on how to solve the issue, feel free to include
-it in the description.
+You can report a bug through [GitHub Issues][action-report-bug].
 
-## Making Changes
+## Make Changes
 
-To help minimize the amount of time and effort you put into it, please reach out to talk
-about your proposed changes by opening an [issue](https://github.com/rognan/deno-gradle-plugin/issues).
+To minimize the amount of time and effort you put in, reach out to talk about your proposed changes
+on the issue you wish to work on, or you can open a new [issue][issue-tracker] if no applicable
+issue exists.
 
+For any non-trivial change please explain:
 
-For any non-trivial change, create a short design document explaining:
+- The use-case and how the change will help improve the project.
+- What the API will look like.
+- What could go wrong and if there are any special considerations.
+- How it will be implemented (roughly).
 
-- Why the change? What's the use case?
-- What will the API look like?
-- What test cases should it have? What could go wrong?
-- How will it roughly be implemented?
+### Pre-requisites
 
-This can be done directly inside the GitHub issue.
+In order to make code contributions, you'll need:
 
-## Development Setup
+- Install [Git][lnk-git].
+- Get a [GitHub account][lnk-gh-join].
+- Install [JDK][lnk-java-jdk] 11.
+- Install your favourite IDE.
 
-In order to make changes, you'll need:
+### Configure Git
 
-- A [JDK](http://jdk.java.net/), version 11.
-- [Git](https://git-scm.com/), and a [GitHub account](https://github.com/join).
-- Your favorite text editor or IDE
+Before you make your first commit, make sure it's configured.
 
-## Configuring Git
+Your global `.gitignore` file should contain your environment specific entries.
+Such entries typically fall into one of these categories:
 
-Before making your first commit you'll need to configure `git`:
+- **OS specific**; e.g. `*~`, `.DS_Store`, `.netrwhist`.
+- **IDE specific**; e.g. `.vscode`, `.idea/`, `.metadata`, `*.sublime-*`, `.*.sw?`.
+- **Tool specific**; e.g. entries specific to tools such as `asdf`, `sdkman`, etc.
+
+Let us know who you are:
 
 ```shell
-git config --global user.name <your full name>
-git config --global user.email <your@email.com>
+git config --global user.name <your name>
+git config --global user.email <your-email@example.com>
 ```
 
-These commands edit the global git config. If you wish to configure your local git
-repository config instead, navigate to the project root directory where you have your
-`.git/` folder, and omit the flag `--global` before running the commands.
+Optional, but recommended, sign your git commits.
+To generate an ssh-key you can follow:
+[GitHub: Generate SSH Key][docs-gh-gen-ssh-key],
+[GitHub: Add SSH Key to GH][docs-gh-add-ssh-key]
+and [GitHub: Sign Commits][docs-gh-sign-commit].
 
-Optional, but recommended, you can enable signing your git commits like this:
+TL;DR:
 
 ```shell
-git config --global user.signingkey <key id>
+ssh-keygen -t ed25519 -C "your-email@example.com"
+ssh-add ~/.ssh/id_ed25519
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
 git config --global commit.gpgsign true
+git config --global tag.gpgsign true
+# assumes GitHub's CLI tool 'gh' is installed (https://cli.github.com/)
+gh ssh-key add ~/.ssh/id_ed25519.pub --title "<description>" --type signing
 ```
 
-For commit signing to work as intended you'll need to install and configure GPG or S/MIME.
+### Code Guidelines
 
-<details>
-  <summary>Install and configure GPG</summary>
+Code contributions should contain the following:
 
-## Installing GPG (on MacOs)
+- Unit test coverage for any logic introduced.
+- Integration test coverage at the level of build execution.
+- Documentation for the end-user if applicable.
 
-**Using homebrew**:
+Code formatting rules are enforced during build execution.
+If formatting issues appear you can fix them automatically by executing `./gradlew spotlessApply`.
+If you'd like to run the checks manually you can execute `./gradlew spotlessCheck`.
 
-```shell
-brew install gnupg pinentry-mac
-gpg --full-generate-key
-# Follow the wizard (Opt for RSA/4096)
-gpg --list-secret-keys --keyid-format LONG
-# Copy key (I.e. the last part of `rsa4096/AC23B8C17ECEED2F`)
-git config --global gpg.program gpg
-echo "export GPG_TTY=$(tty)" >> ~/.bashrc
-```
-
-Add default key to the `gpg.conf` and `gpg-agent.conf` found in your `~/.gnupg/` folder on
-your local machine. Afterwards you may need to reload your shell and your gpg-agent.
-
-Follow the [official GitHub documentation](https://help.github.com/en/articles/adding-a-new-gpg-key-to-your-github-account)
-to upload the public part of your gpg key to GitHub.
-
-Use `git verify-commit <commit hash>` to verify your very first commit.
-</details>
-
-<details>
-  <summary>A note about ~/.gitignore</summary>
-
-You may use whichever OS or IDE you wish, just add your development environment specific
-files to your global `~/.gitignore` file first.
-
-Such files typically fall into these categories:
-
-- **Operating System specific files**; i.e. `*~`, `.DS_Store`, `.netrwhist`.
-- **IDE specific files**; i.e. `.idea/`, `.metadata`, `*.sublime-*`, `.*.sw?`.
-- **Tooling specific files**; i.e. for `jenv`, `asdf`, `sdkman`, etc.
-</details>
-
-## Importing into IntelliJ IDEA
-
-To import the project in [IntelliJ IDEA](https://www.jetbrains.com/idea/), v2020.3, or newer, is
-required:
-
-- Use _"File"_ → _"Open"_, and select the `build.gradle.kts` file to import the code.
-- Ensure _"Use default gradle wrapper"_ is selected.
-- In _"Gradle Settings"_ (_"Preferences"_ → _"Build Tools"_ → _"Gradle"_)
-  - Ensure _"Build and run using"_ and _"Run tests using"_ are set to Gradle (Default)
-  - Select a Java 11 VM as "Gradle JVM"
-- In the _"File already exists"_ dialogue, choose _"Yes"_ to overwrite.
-- In the _"Open Project"_ dialogue, choose _"Delete Existing Project and Import"_.
-
-## Importing into Other IDEs
-
-Please refer to your vendor documentation.
-
-## Code Change Guidelines
-
-All code contributions should contain the following:
-
-- Unit tests for any logic introduced
-- Integration test coverage of the bug/feature at the level of build execution.
-- Documentation
-
-## Authoring Commits
+### Author Commits
 
 Keep commits discrete and self-contained:
-- Avoid including multiple unrelated changes in a single commit
+
+- Avoid including multiple unrelated changes in a single commit.
 - Avoid spreading a single change across multiple commits.
-  A single commit should make sense in isolation
+  A single commit should make sense in isolation.
 
-In order for your contributions to be accepted, you must [sign off](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff) your Git commits to
-indicate you agree to the terms of [Developer Certificate of Origin](https://developercertificate.org/).
+In order for your contributions to be accepted you must [sign off][docs-commit-signoff] your Git
+commits to indicate you agree to the terms of [Developer Certificate of Origin][lnk-dev-cert].
 
-## Writing Commit Messages
+**Writing Commit Messages:**
 
 - Capitalize the subject line
 - Use the imperative mood in the subject line
-- Limit the subject line to about 50 characters
+- Limit the subject line to 52 characters
 - Do not end the subject line with a period
 - Separate subject from body with a blank line
 - Use a hanging indent for paragraphs
 - Wrap the body at 72 characters
 - Use the body to explain _what_ and _why_, not _how_
-- End the commit message with the issue id
 
 **Example imperative verbs**:
 
 _Add, Remove, Fix, Enable, Disable, Format, Migrate, Upgrade, Extract_.
 
-## Building from Source
-
-The project can be built from the command line using the included Gradle Wrapper scripts
-`./gradlew` or `./gradlew.bat`.
-
-## Submitting Changes
+### Submit Changes
 
 When you submit your pull request, someone will review it. It's normal that this process
 can take some time, so don't get discouraged by any change requests.
 
-## Getting Help
+## Build from Source
 
-If you run into any trouble, please reach out on the issue you are working on.
+The project can be built from the command line using the included Gradle Wrapper scripts
+`./gradlew build` or `./gradlew.bat build`.
+
+## Get Help
+
+If you run into any trouble, please reach out on the issue you are working on or open a new one.
+
+[action-report-bug]: https://github.com/rognan/deno-gradle-plugin/issues/new?template=report-bug.md
+[action-request-feature]: https://github.com/rognan/deno-gradle-plugin/issues/new?template=request-feature.md
+[docs-commit-signoff]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff
+[docs-gh-add-ssh-key]: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+[docs-gh-gen-ssh-key]: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+[docs-gh-sign-commit]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
+[issue-tracker]: https://github.com/rognan/deno-gradle-plugin/issues
+[lnk-dev-cert]: https://developercertificate.org/
+[lnk-editorconfig]: https://editorconfig.org/
+[lnk-git]: https://git-scm.com/
+[lnk-gh-join]: https://github.com/join
+[lnk-intellij-idea]: https://www.jetbrains.com/idea/
+[lnk-java-jdk]: http://jdk.java.net/
