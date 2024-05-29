@@ -23,9 +23,9 @@ A clear and concise description of what you expected to happen.
 If applicable, add an example project to help explain your problem.
 
 **Please complete the following information:**
- - OS: [e.g. Windows]
- - Gradle version [e.g. 42]
- - Plugin version [e.g. 42]
+ - OS + version: [e.g. Windows 11]
+ - Gradle version
+ - Plugin version
 
 **Additional context**
 Add any other context about the problem here.
