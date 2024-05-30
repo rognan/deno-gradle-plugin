@@ -4,7 +4,7 @@ Thank you for wanting to contribute! 🥳👌
 
 **Table of Contents**
 
-<detail>
+<details>
   <summary>Click to expand</summary>
 
   - [Request Feature](#request-feature)
@@ -19,7 +19,7 @@ Thank you for wanting to contribute! 🥳👌
   - [Build from Source](#build-from-source)
   - [Get Help](#get-help)
 
-</detail>
+</details>
 
 ## Request Feature
 
