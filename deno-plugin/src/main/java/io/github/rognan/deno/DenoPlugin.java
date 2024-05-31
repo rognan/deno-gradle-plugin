@@ -23,6 +23,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.ConfigurationContainer;
+import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.repositories.IvyArtifactRepository;
 import org.gradle.api.file.Directory;
 import org.gradle.api.file.RegularFile;
@@ -63,55 +64,58 @@ public class DenoPlugin implements Plugin<Project> {
       it.setCanBeResolved(true);
       it.setTransitive(false);
       it.setVisible(false);
-
-      it.defaultDependencies(dependencySet -> dependencySet.add(
-        project.getDependencies().create(
-          extension.getVersion().map(helper::getDependencyNotation).get()
-        ))
-      );
     });
 
-    project.getRepositories().ivy(repository -> {
-      repository.setName("io.github.rognan.deno:denoland@github");
-      repository.setUrl(URI.create("https://github.com/"));
+    project.afterEvaluate(it -> {
+      if (configuration.getDependencies().isEmpty()) {
+        project.getRepositories().ivy(repository -> {
+          repository.setName("io.github.rognan.deno:denoland@github");
+          repository.setUrl(URI.create("https://github.com/"));
+          repository.patternLayout(layout -> layout.artifact(
+            "[organization]/[module]/releases/download/v[revision]/[module]-[classifier].[ext]"
+          ));
+          repository.metadataSources(IvyArtifactRepository.MetadataSources::artifact);
+          repository.content(descriptor -> {
+            descriptor.includeGroup("denoland"); // only handle 'denoland' dependencies
+            descriptor.onlyForConfigurations(configuration.getName());
+          });
+        });
 
-      repository.patternLayout(layout -> layout.artifact(
-        "[organization]/[module]/releases/download/v[revision]/[module]-[classifier].[ext]"
-      ));
+        Dependency defaultDependency = project.getDependencies().create(
+          extension.getVersion().map(helper::getDependencyNotation).get()
+        );
 
-      repository.metadataSources(IvyArtifactRepository.MetadataSources::artifact);
-
-      repository.content(descriptor -> {
-        // Only handle 'denoland:*:*' dependencies
-        descriptor.includeGroup("denoland");
-
-        // Only handle 'deno' configuration
-        descriptor.onlyForConfigurations(configuration.getName());
-      });
+        configuration.getDependencies().add(defaultDependency);
+      }
     });
 
     Provider<File> archiveProvider = configuration
       .getElements()
       .map(it -> it.stream()
         .findFirst()
-        .orElseThrow(() -> new IllegalStateException("Could not find deno dependency. Did you add it?"))
+        .orElseThrow(() -> new IllegalStateException("Could not find deno dependency."))
         .getAsFile()
       );
 
+    Directory baseInstallDir = project.getRootProject()
+      .getLayout()
+      .getProjectDirectory()
+      .dir(".gradle")
+      .dir("deno");
+
     Provider<Directory> installDirProvider = project.provider(() -> {
-      return extension.getVersion().map(theVersion -> {
-        return project.getRootProject()
-          .getLayout()
-          .getProjectDirectory()
-          .dir(".gradle")
-          .dir("deno")
-          .dir(helper.getInstallDirName(theVersion));
-      }).get();
+      String version = configuration.getDependencies()
+        .stream()
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Could not find deno dependency."))
+        .getVersion();
+
+      return baseInstallDir.dir(helper.getInstallDirName(version));
     });
 
-    Provider<RegularFile> denoProvider = installDirProvider.flatMap(it -> {
-      return project.provider(() -> it.file(helper.getExecutableName()));
-    });
+    Provider<RegularFile> denoProvider = installDirProvider.flatMap(it ->
+      project.provider(() -> it.file(helper.getExecutableName()))
+    );
 
     TaskProvider<InstallTask> installTaskProvider = project.getTasks()
       .register(InstallTask.NAME, InstallTask.class, it -> {
