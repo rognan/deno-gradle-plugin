@@ -27,11 +27,12 @@ import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.repositories.IvyArtifactRepository;
 import org.gradle.api.file.Directory;
 import org.gradle.api.file.RegularFile;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.TaskProvider;
 
 import javax.annotation.Nonnull;
-import java.io.File;
+import javax.inject.Inject;
 import java.net.URI;
 
 /**
@@ -52,6 +53,14 @@ import java.net.URI;
  * </pre>
  */
 public class DenoPlugin implements Plugin<Project> {
+
+  private final ObjectFactory objectFactory;
+
+  @Inject
+  public DenoPlugin(ObjectFactory objectFactory) {
+    this.objectFactory = objectFactory;
+  }
+
   @Override
   public void apply(@Nonnull Project project) {
     PlatformHelper helper = new PlatformHelper();
@@ -89,12 +98,13 @@ public class DenoPlugin implements Plugin<Project> {
       }
     });
 
-    Provider<File> archiveProvider = configuration
+    Provider<RegularFile> archiveProvider = configuration
       .getElements()
       .map(it -> it.stream()
         .findFirst()
+        .map(file -> objectFactory.fileProperty().fileValue(file.getAsFile()))
         .orElseThrow(() -> new IllegalStateException("Could not find deno dependency."))
-        .getAsFile()
+        .get()
       );
 
     Directory baseInstallDir = project.getRootProject()
@@ -119,7 +129,7 @@ public class DenoPlugin implements Plugin<Project> {
 
     TaskProvider<InstallTask> installTaskProvider = project.getTasks()
       .register(InstallTask.NAME, InstallTask.class, it -> {
-        it.getArchive().set(project.getLayout().file(archiveProvider));
+        it.getArchive().set(archiveProvider);
         it.getDestinationDir().set(installDirProvider);
       });
 
