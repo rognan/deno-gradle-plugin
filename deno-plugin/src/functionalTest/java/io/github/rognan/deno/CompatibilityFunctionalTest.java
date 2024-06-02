@@ -16,7 +16,6 @@
 
 package io.github.rognan.deno;
 
-import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,24 +37,22 @@ import static java.nio.file.StandardOpenOption.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS;
 
-class GradleBackwardsCompatibilityFunctionalTest {
-  private static final String propertiesFileTemplate = """
+class CompatibilityFunctionalTest {
+  static final String propertiesFileTemplate = """
     org.gradle.java.home=%s
     """;
 
-  private static final String settingsFileTemplate = """
+  static final String settingsFileTemplate = """
       buildCache {
-        // Having local cache in a temp dir will ensure a clean build cache between tests.
-        // The default local cache dir (A Gradle user home created by the Gradle Test Kit) is
-        // re-used between tests.
-
+        // local cache in temp dir ensures clean build cache between tests.
+        // default local cache dir is re-used between tests.
         local {
-          directory = file("%s")
+          directory = File("%s")
         }
       }
     """;
 
-  private static final String buildFileTemplate = """
+  static final String buildFileTemplate = """
     plugins {
       id("io.github.rognan.deno") version("0.1.0")
     }
@@ -70,9 +67,9 @@ class GradleBackwardsCompatibilityFunctionalTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    URI settingsFile = new File(projectDir, "settings.gradle.kts").toURI();
-    URI buildFile = new File(projectDir, "build.gradle.kts").toURI();
-    URI cacheDir = new File(projectDir, ".cache").toURI();
+    var settingsFile = new File(projectDir, "settings.gradle.kts").toURI();
+    var buildFile = new File(projectDir, "build.gradle.kts").toURI();
+    var cacheDir = new File(projectDir, ".cache").toURI();
 
     write(settingsFile, format(settingsFileTemplate, cacheDir));
     write(buildFile, buildFileTemplate);
@@ -80,7 +77,7 @@ class GradleBackwardsCompatibilityFunctionalTest {
 
   @Test
   void it_can_execute_in_projects_where_config_cache_is_enabled() throws IOException {
-    URI propertiesFile = new File(projectDir, "gradle.properties").toURI();
+    var propertiesFile = new File(projectDir, "gradle.properties").toURI();
     write(propertiesFile, format(propertiesFileTemplate, windowsFriendlyPath(System.getProperty("java21Home"))));
 
     var buildResult = GradleRunner.create()
@@ -94,9 +91,11 @@ class GradleBackwardsCompatibilityFunctionalTest {
       .withDebug(true)
       .build();
 
-    BuildTask installTask = buildResult.task(":denoInstall");
-    BuildTask execTask = buildResult.task(":denoExec");
+    var installTask = buildResult.task(":denoInstall");
+    var execTask = buildResult.task(":denoExec");
 
+    assertThat(installTask).isNotNull();
+    assertThat(execTask).isNotNull();
     assertThat(installTask.getOutcome()).isEqualTo(SUCCESS);
     assertThat(execTask.getOutcome()).isEqualTo(SUCCESS);
 
@@ -104,9 +103,9 @@ class GradleBackwardsCompatibilityFunctionalTest {
   }
 
   @ParameterizedTest
-  @MethodSource("compatibilityMatrixProvider")
+  @MethodSource("compatibilityMatrix")
   void i_can_execute_the_plugin_with_specified_gradle_and_java(String gradleVersion, String javaHome) throws IOException {
-    URI propertiesFile = new File(projectDir, "gradle.properties").toURI();
+    var propertiesFile = new File(projectDir, "gradle.properties").toURI();
     write(propertiesFile, format(propertiesFileTemplate, windowsFriendlyPath(javaHome)));
 
     var buildResult = GradleRunner.create()
@@ -120,9 +119,11 @@ class GradleBackwardsCompatibilityFunctionalTest {
       .withDebug(true)
       .build();
 
-    BuildTask installTask = buildResult.task(":denoInstall");
-    BuildTask execTask = buildResult.task(":denoExec");
+    var installTask = buildResult.task(":denoInstall");
+    var execTask = buildResult.task(":denoExec");
 
+    assertThat(installTask).isNotNull();
+    assertThat(execTask).isNotNull();
     assertThat(installTask.getOutcome()).isEqualTo(SUCCESS);
     assertThat(execTask.getOutcome()).isEqualTo(SUCCESS);
 
@@ -138,23 +139,24 @@ class GradleBackwardsCompatibilityFunctionalTest {
     );
   }
 
-  /* Support java LTS versions and the last 2 major versions of Gradle */
-  static Stream<Arguments> compatibilityMatrixProvider() {
-    String java8Home = System.getProperty("java8Home");
-    String java11Home = System.getProperty("java11Home");
-    String java17Home = System.getProperty("java17Home");
-    String java21Home = System.getProperty("java21Home");
+  // support java LTS versions and non-EOL versions of Gradle.
+  // see also https://docs.gradle.org/current/userguide/feature_lifecycle.html#eol_support
+  static Stream<Arguments> compatibilityMatrix() {
+    var java8Home = System.getProperty("java8Home");
+    var java11Home = System.getProperty("java11Home");
+    var java17Home = System.getProperty("java17Home");
+    var java21Home = System.getProperty("java21Home");
 
-    Stream<Arguments> gradle7 = Stream.of(java8Home, java11Home, java17Home)
-      .map(it -> Arguments.of("7.6.3", it));
+    var gradle7 = Stream.of(java8Home, java11Home, java17Home)
+      .map(it -> Arguments.of("7.6.4", it));
 
-    Stream<Arguments> gradle8 = Stream.of(java8Home, java11Home, java17Home, java21Home)
-      .map(it -> Arguments.of("8.5", it));
+    var gradle8 = Stream.of(java8Home, java11Home, java17Home, java21Home)
+      .map(it -> Arguments.of("8.8", it));
 
     return Stream.of(gradle7, gradle8).flatMap(it -> it);
   }
 
-  private String windowsFriendlyPath(String javaHome) {
+  String windowsFriendlyPath(String javaHome) {
     return javaHome.replace("\\", "\\\\");
   }
 }
