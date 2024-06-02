@@ -16,43 +16,76 @@
 
 package io.github.rognan.deno;
 
-import org.gradle.api.Project;
+import io.github.rognan.deno.task.InstallTask;
+import org.gradle.api.artifacts.Dependency;
+import org.gradle.api.artifacts.repositories.IvyArtifactRepository;
+import org.gradle.api.internal.project.ProjectInternal;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
+
+import static io.github.rognan.deno.DenoExtension.DEFAULT_VERSION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DenoPluginTest {
-  private Project project;
+  @Nested
+  @DisplayName("When 'apply plugin' and nothing else")
+  class WhenDefaultsTest {
+    ProjectInternal project;
 
-  @BeforeEach
-  void setUp() {
-    project = ProjectBuilder.builder().build();
-    project.getPlugins().apply("io.github.rognan.deno");
-  }
+    @BeforeEach
+    void setUp() {
+      project = (ProjectInternal) ProjectBuilder.builder().build();
+      project.getPlugins().apply("io.github.rognan.deno");
+      project.evaluate();
+    }
 
-  @Test
-  void plugin_registers_task_with_name_denoInstall() {
-    assertNotNull(project.getTasks().findByName("denoInstall"));
-  }
+    @Test
+    void it_registers_deno_extension() {
+      var extension = project.getExtensions()
+        .getByType(DenoExtension.class);
 
-  @Test
-  void task_denoInstall_is_located_in_the_BuildSetup_task_group() {
-    String group = project.getTasks()
-      .findByName("denoInstall")
-      .getGroup();
+      assertThat(extension).isNotNull();
+    }
 
-    assertThat(group).isEqualTo("Build Setup");
-  }
+    @Test
+    void it_adds_install_task() {
+      var task = project.getTasks()
+        .withType(InstallTask.class)
+        .findByName("denoInstall");
 
-  @Test
-  void task_denoInstall_has_a_non_empty_default_description() {
-    String description = project.getTasks()
-      .findByName("denoInstall")
-      .getDescription();
+      assertNotNull(task);
+      assertThat(task.getGroup()).isEqualTo("Build Setup");
+      assertThat(task.getDescription()).isEqualTo("Install a project local version of deno.");
+    }
 
-    assertThat(description).isNotBlank();
+    @Test
+    void it_adds_denoland_repository() {
+      var repository = (IvyArtifactRepository) project.getRepositories()
+        .findByName("io.github.rognan.deno:denoland@github");
+
+      assertThat(repository).isNotNull();
+      assertThat(repository.getUrl()).isEqualTo(URI.create("https://github.com/"));
+      assertThat(repository.isAllowInsecureProtocol()).isFalse();
+    }
+
+    @Test
+    void it_adds_dependency_in_deno_configuration() {
+      var maybeDependency = project.getConfigurations().getByName("deno")
+        .getDependencies()
+        .stream().findFirst();
+
+      assertThat(maybeDependency).isPresent();
+
+      Dependency dependency = maybeDependency.get();
+      assertThat(dependency.getVersion()).isEqualTo(DEFAULT_VERSION);
+      assertThat(dependency.getGroup()).isEqualTo("denoland");
+      assertThat(dependency.getName()).isEqualTo("deno");
+    }
   }
 }
