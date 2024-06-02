@@ -101,9 +101,8 @@ tasks.withType<AbstractArchiveTask>().configureEach {
   isReproducibleFileOrder = true
   isPreserveFileTimestamps = false
 
-  // 755 and 644, respectively, when converted from base-10 (decimal) to base-8 (octal)
-  dirMode = 493
-  fileMode = 420
+  dirPermissions { unix("755") }
+  filePermissions { unix("644") }
 }
 
 tasks.withType<AbstractArchiveTask>().configureEach {
