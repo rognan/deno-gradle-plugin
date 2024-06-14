@@ -11,7 +11,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4.1.6
-      - uses: gradle/actions/dependency-submission@v3.3.2
+      - uses: gradle/actions/dependency-submission@v3.4.0
         with:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
           dependency-graph: download-and-submit
