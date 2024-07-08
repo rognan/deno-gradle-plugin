@@ -23,9 +23,9 @@ jobs:
         languages: [ "java-kotlin" ]
     steps:
       - uses: actions/checkout@v4.1.6
-      - uses: github/codeql-action/init@v3.25.8
+      - uses: github/codeql-action/init@v3.25.11
         with:
           languages: ${{ matrix.languages }}
           queries: security-extended
-      - uses: github/codeql-action/autobuild@v3.25.8
-      - uses: github/codeql-action/analyze@v3.25.8
+      - uses: github/codeql-action/autobuild@v3.25.11
+      - uses: github/codeql-action/analyze@v3.25.11
