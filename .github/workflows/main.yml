@@ -36,7 +36,7 @@ jobs:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
       - name: Execute build
         run: >
-          ./gradlew build --info --console plain --scan --no-daemon
+          ./gradlew build --info --console plain --no-daemon
           -D org.gradle.java.installations.auto-detect=true
           -D org.gradle.java.installations.auto-download=false
       - name: Upload reports
@@ -53,8 +53,5 @@ jobs:
       - uses: actions/checkout@v4.1.7
       - uses: gradle/actions/dependency-submission@v3.4.2
         with:
-          build-scan-publish: true
-          build-scan-terms-of-service-url: "https://gradle.com/terms-of-service"
-          build-scan-terms-of-service-agree: "yes"
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
           dependency-graph: generate-and-upload

@@ -4,40 +4,6 @@ dependencyResolutionManagement {
   }
 }
 
-plugins {
-  id("com.gradle.enterprise") version "3.16.2"
-}
-
-gradleEnterprise {
-  buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-
-    val isCiServer = !env("CI").isNullOrEmpty()
-    val isAct = env("ACT").toBoolean()
-
-    when {
-      isAct -> tag("ACT")
-      isCiServer && !isAct -> tag("CI")
-      else -> tag("local")
-    }
-
-    if (isCiServer) {
-      termsOfServiceAgree = "yes"
-      link("VCS", linkToGitHubTagOrBranch())
-      tag(env("GITHUB_REF_TYPE")) // branch or tag
-      value("Commit", env("GITHUB_SHA"))
-      value("Workflow", env("GITHUB_WORKFLOW"))
-      value("Job", env("GITHUB_JOB"))
-    }
-
-    obfuscation {
-      username { "[hidden]" }
-      hostname { "[hidden]" }
-      ipAddresses { listOf("[hidden]") }
-    }
-  }
-}
-
 include("deno-plugin")
 
 rootProject.name = "deno-gradle-plugin"
