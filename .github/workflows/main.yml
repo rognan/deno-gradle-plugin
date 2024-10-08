@@ -18,7 +18,7 @@ jobs:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.1
       - name: Configure JDKs
         uses: actions/setup-java@v4.2.2
         with:
@@ -50,7 +50,7 @@ jobs:
   upload-dependency-graph:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.1
       - uses: gradle/actions/dependency-submission@v4.0.0
         with:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
