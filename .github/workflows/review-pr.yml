@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
-      - uses: actions/dependency-review-action@v4.3.4
+      - uses: actions/dependency-review-action@v4.4.0
         with:
           comment-summary-in-pr: always
           retry-on-snapshot-warnings: true
