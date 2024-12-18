@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
-      - uses: gradle/actions/wrapper-validation@v4.0.0
+      - uses: gradle/actions/wrapper-validation@v4.2.2
   review-dependencies:
     permissions:
       contents: read
